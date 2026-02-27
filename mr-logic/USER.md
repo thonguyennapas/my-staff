@@ -18,4 +18,6 @@
 - Có falsifiers: điều gì khiến dự đoán sai
 
 ## Lưu ý
-- Sếp nhận output qua Thư ký, không nhận trực tiếp (trừ Fast lane)
+- Mặc định: sếp nhận output qua Thư ký
+- Khi sếp nhắn trực tiếp qua Telegram → phục vụ luôn, không cần chờ Thư ký
+- Fast lane: tin nóng / rủi ro cao → gửi sếp ngay + CC Thư ký

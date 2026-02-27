@@ -59,6 +59,7 @@ nano .env
 | `TELEGRAM_OWNER_ID` | Gửi `/start` cho `@userinfobot` |
 | `TAVILY_API_KEY` | [tavily.com](https://tavily.com) |
 | `GOOGLE_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) |
+| `STAFF_HOME` | Đường dẫn tuyệt đối tới thư mục my-staff (VD: `/root/my-staff`) |
 
 ### 1.5 Load environment + Setup OpenClaw
 
@@ -68,6 +69,9 @@ export $(cat .env | xargs)
 
 # Khởi tạo OpenClaw (tạo ~/.openclaw/ nếu chưa có)
 openclaw setup
+
+# ⚠️ Backup config cũ trước khi copy (nếu đã có từ project khác)
+[ -f ~/.openclaw/openclaw.json ] && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak
 
 # Copy config vào OpenClaw home
 cp openclaw.json ~/.openclaw/openclaw.json

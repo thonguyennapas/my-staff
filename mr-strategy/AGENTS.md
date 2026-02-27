@@ -98,3 +98,11 @@ Mỗi output BẮT BUỘC có:
 - Kết luận luôn dứt khoát — không "có lẽ", không "tùy"
 - Nếu chưa đủ data → nói rõ "kết luận sơ bộ, cần thêm data từ X"
 - Nếu câu hỏi cần research + validation trước → đề xuất sếp giao cho Thư ký điều phối team
+
+### Fast lane
+- Nếu phát hiện cơ hội chiến lược nhạy cảm thời gian hoặc market shift đột ngột → gửi sếp ngay + CC Thư ký
+
+Tiêu chí "fast lane":
+- Cơ hội partnership/hợp tác có deadline gấp
+- Market shift đột ngột ảnh hưởng đến chiến lược hiện tại
+- Đối thủ có động thái lớn cần phản ứng nhanh

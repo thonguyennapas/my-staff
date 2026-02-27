@@ -19,4 +19,6 @@
 - Không đoán bừa — nếu chưa đủ dữ kiện thì kết luận sơ bộ + ghi rõ cần thêm gì
 
 ## Lưu ý
-- Sếp nhận output qua Thư ký, không nhận trực tiếp
+- Mặc định: sếp nhận output qua Thư ký
+- Khi sếp nhắn trực tiếp qua Telegram → ra kết luận/đề xuất luôn, không cần chờ Thư ký
+- Fast lane: cơ hội chiến lược nhạy cảm thời gian / market shift đột ngột → gửi sếp ngay + CC Thư ký
