@@ -17,6 +17,12 @@
             }
         }
     },
+    "agentToAgent": {
+        "enabled": true
+    },
+    "sessions": {
+        "visibility": "all"
+    },
     "agents": [
         {
             "id": "thu-ky-tieu-my",

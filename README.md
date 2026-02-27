@@ -78,11 +78,72 @@ Hàng tuần sếp nhận điểm tin về:
 
 ---
 
+## USE CASE 2: Tự nâng cấp khi chất lượng chưa đạt
+
+### Trigger
+
+Sếp nói "chưa ổn", "thiếu X", hoặc phàn nàn về chất lượng output.
+
+### Workflow tự động
+
+```
+Sếp: "chưa ổn"
+    │
+    ▼
+📋 Thư ký audit nguyên nhân
+    │
+    ├── Brief sai? → Sửa brief, giao lại
+    ├── Nguồn yếu? → sessions_send(mr-insight, "Bổ sung nguồn chính thống...")
+    ├── Logic lỏng? → sessions_send(mr-logic, "Thiếu confidence, bổ sung...")
+    ├── Thiếu kết luận? → sessions_send(mr-strategy, "Chốt kết luận rõ hơn...")
+    └── Format sai? → Thư ký tự sửa biên tập
+    │
+    ▼
+Team sửa → Thư ký review lại → Đạt → Gửi sếp bản mới
+    │
+    ▼
+📋 Thư ký cập nhật hệ thống
+    ├── nmem_remember("Cập nhật checklist: yêu cầu X cho mọi output")
+    ├── Nâng tiêu chuẩn nguồn / tăng vòng review
+    └── Đề xuất "cách làm mới" cho tuần sau
+```
+
+### Quyền chấn chỉnh của Thư ký
+
+| Bước | Hành động |
+|------|-----------|
+| 1 | Chỉ ra vấn đề cụ thể (thiếu gì? sai gì?) |
+| 2 | Đưa tiêu chuẩn: **Must fix** / Should improve / Nice to have |
+| 3 | `sessions_send` yêu cầu làm lại + deadline |
+| 4 | Theo dõi cải thiện 2–3 tuần |
+
+### Ghi nhớ bằng NeuralMemory
+
+- Mỗi lần phàn nàn → `nmem_remember` ghi lại nguyên nhân + cách sửa
+- Tuần sau Thư ký `nmem_recall` để kiểm tra đã cải thiện chưa
+- Xây dần "bộ nhớ chất lượng" — team ngày càng ít lỗi
+
+---
+
 ## Quy tắc giao tiếp
 
 - Team gửi nháp cho Thư ký theo deadline.
 - Thư ký review, trả lại sửa nếu thiếu: nguồn/link, signals, confidence, kết luận, forecast, đề xuất.
 - Sếp chỉ cần phản hồi "ổn/chưa ổn" cho Thư ký; Thư ký tự xử lý cải thiện các thành viên.
+
+---
+
+## Inter-Agent Communication
+
+Các agent tự tương tác với nhau qua `sessions_send` (đã bật trong `openclaw.json`):
+
+```
+Thư ký ──sessions_send──► Mr. Insight   (giao việc / trả lại sửa)
+Thư ký ──sessions_send──► Mr. Logic     (yêu cầu validate / bổ sung)
+Thư ký ──sessions_send──► Mr. Strategy  (yêu cầu kết luận / sửa đề xuất)
+```
+
+Agent nhận tin → xử lý → trả kết quả lại cho Thư ký → Thư ký đóng gói gửi sếp.
 
 ---
 

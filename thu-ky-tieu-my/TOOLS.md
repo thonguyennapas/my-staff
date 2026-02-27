@@ -23,3 +23,24 @@ Plugin đã cấu hình: `@neuralmemory/openclaw-plugin`
 
 - Kiểm tra nhanh thông tin khi cần verify trước khi đóng gói
 - Không dùng để research sâu (để Mr. Insight)
+
+## Inter-Agent Communication (sessions_send)
+
+Thư ký có thể **gửi tin nhắn trực tiếp** cho các thành viên team:
+
+| Hành động | Cách dùng |
+|-----------|-----------|
+| Giao việc cho Mr. Insight | `sessions_send(agentId="mr-insight", message="Gom tin CBDC tuần này...")` |
+| Yêu cầu Mr. Logic validate | `sessions_send(agentId="mr-logic", message="Validate 5 tin này...")` |
+| Yêu cầu Mr. Strategy kết luận | `sessions_send(agentId="mr-strategy", message="Chốt kết luận tuần...")` |
+| Trả lại sửa | `sessions_send(agentId="mr-insight", message="Thiếu signals, bổ sung 3 tín hiệu...")` |
+
+### Quy trình review & trả lại sửa
+
+1. Nhận output từ team member
+2. Kiểm tra qua quality gate (checklist)
+3. Nếu **chưa đạt** → `sessions_send` trả lại với feedback cụ thể:
+   - Thiếu gì? (nguồn/link, signals, confidence, kết luận...)
+   - Tiêu chuẩn sửa: Must fix / Should improve / Nice to have
+   - Deadline sửa
+4. Nhận bản sửa → kiểm tra lại → đóng gói nếu đạt
