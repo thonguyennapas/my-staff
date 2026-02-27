@@ -21,25 +21,32 @@ python3 --version
 sudo apt-get install -y python3 python3-pip
 ```
 
-### 1.2 Cài OpenClaw + NeuralMemory
+### 1.2 Cài OpenClaw
 
 ```bash
-# Cài OpenClaw
 npm install -g openclaw@latest
-
-# Cài NeuralMemory (plugin memory cho OpenClaw)
-pip install --break-system-packages neural-memory
-npm install -g @neuralmemory/openclaw-plugin
 ```
 
-### 1.3 Clone repo
+### 1.3 Cài NeuralMemory plugin
+
+```bash
+# Python package
+pip install --break-system-packages --ignore-installed neural-memory
+
+# OpenClaw plugin (phải cài bằng openclaw CLI)
+openclaw plugins install @neuralmemory/openclaw-plugin
+```
+
+> ⚠️ Nếu `openclaw plugins install` báo lỗi config → tạm bỏ `plugins` khỏi `~/.openclaw/openclaw.json`, cài xong rồi thêm lại.
+
+### 1.4 Clone repo
 
 ```bash
 git clone https://github.com/thonguyennapas/my-staff.git
 cd my-staff
 ```
 
-### 1.4 Tạo file .env
+### 1.5 Tạo file .env
 
 ```bash
 cp .env.example .env
@@ -58,7 +65,7 @@ nano .env
 | `TELEGRAM_OWNER_ID` | Gửi `/start` cho `@userinfobot` |
 | `GOOGLE_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) |
 
-### 1.5 Setup auth (API key) — bắt buộc
+### 1.6 Setup auth (API key) — bắt buộc
 
 ```bash
 # Chạy configure wizard — chọn:
@@ -70,7 +77,7 @@ openclaw configure
 
 > ⚠️ **Bước này bắt buộc** — wizard tạo `auth-profiles.json` đúng format cho main agent.
 
-### 1.6 Sync auth cho tất cả agents
+### 1.7 Sync auth cho tất cả agents
 
 ```bash
 # Copy auth từ main agent → 4 agents custom
@@ -80,7 +87,7 @@ bash scripts/sync-auth.sh
 
 > Sau này đổi API key: chạy `openclaw configure` lại → rồi `bash scripts/sync-auth.sh`
 
-### 1.7 Copy config vào OpenClaw
+### 1.8 Copy config vào OpenClaw
 
 ```bash
 mkdir -p ~/.openclaw
@@ -90,7 +97,7 @@ cp openclaw.json ~/.openclaw/openclaw.json
 
 > **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — sửa `~/.openclaw/openclaw.json` thì Gateway tự reload.
 
-### 1.8 Khởi động Gateway
+### 1.9 Khởi động Gateway
 
 ```bash
 # Cách 1: screen (đơn giản, chạy nền)
@@ -106,7 +113,7 @@ pm2 save
 pm2 startup  # tạo script tự chạy khi VPS reboot
 ```
 
-### 1.9 Pairing Telegram (4 bots)
+### 1.10 Pairing Telegram (4 bots)
 
 ```bash
 # Mở Telegram → gửi /start cho từng bot:
@@ -120,7 +127,7 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-### 1.10 Tạo Cron Job (điểm tin hàng tuần)
+### 1.11 Tạo Cron Job (điểm tin hàng tuần)
 
 ```bash
 openclaw cron add \
