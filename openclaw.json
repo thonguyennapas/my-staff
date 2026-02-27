@@ -93,17 +93,6 @@
             }
         }
     ],
-    "models": {
-        "providers": {
-            "google": {
-                "apiKey": {
-                    "source": "env",
-                    "provider": "default",
-                    "id": "GOOGLE_API_KEY"
-                }
-            }
-        }
-    },
     "tools": {
         "agentToAgent": {
             "enabled": true
