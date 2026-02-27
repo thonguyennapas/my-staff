@@ -23,6 +23,15 @@
     "sessions": {
         "visibility": "all"
     },
+    "webSearch": {
+        "provider": "tavily",
+        "tavily": {
+            "apiKey": "${TAVILY_API_KEY}",
+            "searchDepth": "advanced",
+            "maxResults": 10
+        },
+        "fallback": "gemini"
+    },
     "agents": [
         {
             "id": "thu-ky-tieu-my",
