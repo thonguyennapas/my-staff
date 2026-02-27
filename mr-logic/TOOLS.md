@@ -18,8 +18,22 @@ Plugin: `@neuralmemory/openclaw-plugin`
 - **Lưu falsifier**: `nmem_remember("Falsifier: CBDC adoption sẽ chậm NẾU Alipay/WeChat không integrate", type="insight", tag="falsifier,cbdc")`
 - **Recall**: `nmem_recall("risk assessment CBDC tuần trước")` → so sánh với tuần này
 
-## WebSearch / Tavily (Secondary)
+## Web Search (Secondary — cho verify)
 
-- Đối chiếu nguồn: cross-check tin từ nhiều nguồn độc lập
-- Verify facts: kiểm tra claim cụ thể có bằng chứng không
-- Không dùng để research sâu (để Mr. Insight)
+| Tool | Mục đích |
+|------|----------|
+| `web_search` | Cross-check tin từ nhiều nguồn độc lập (dùng Tavily, fallback Gemini) |
+| `web_fetch` | Đọc chi tiết trang nguồn cụ thể để verify claim |
+
+### Lưu ý
+
+- Chỉ dùng để **verify** — không research sâu (để Mr. Insight)
+- Khi cross-check: tìm tối thiểu 2 nguồn độc lập
+- Ghi rõ: nguồn nào confirm, nguồn nào mâu thuẫn
+
+## Inter-Agent Communication (sessions_send)
+
+| Hành động | Cách dùng |
+|-----------|-----------|
+| Gửi output cho Thư ký | `sessions_send(agentId="thu-ky-tieu-my", message="Validation results...")` |
+| Trả lời yêu cầu bổ sung | `sessions_send(agentId="thu-ky-tieu-my", message="Đã bổ sung confidence...")` |

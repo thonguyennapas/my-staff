@@ -19,9 +19,13 @@ Plugin đã cấu hình: `@neuralmemory/openclaw-plugin`
 - **Quality update**: `nmem_remember("Bổ sung checklist: yêu cầu confidence level cho mọi claim", type="instruction")`
 - **Recall**: `nmem_recall("quyết định về CBDC tuần trước")` → nhớ lại context
 
-## WebSearch (Secondary)
+## Web Search (Secondary)
 
-- Kiểm tra nhanh thông tin khi cần verify trước khi đóng gói
+| Tool | Mục đích |
+|------|----------|
+| `web_search` | Kiểm tra nhanh thông tin khi cần verify trước khi đóng gói |
+| `web_fetch` | Đọc nội dung trang web cụ thể nếu cần check nguồn |
+
 - Không dùng để research sâu (để Mr. Insight)
 
 ## Inter-Agent Communication (sessions_send)

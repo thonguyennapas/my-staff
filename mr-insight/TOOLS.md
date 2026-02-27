@@ -17,8 +17,23 @@ Plugin: `@neuralmemory/openclaw-plugin`
 - **Lưu case study**: `nmem_remember("Case: Bank of Israel pilot digital shekel với 2 ngân hàng — link: ...", type="fact", tag="case-study,israel,cbdc")`
 - **Recall**: `nmem_recall("CBDC pilots châu Á 2025-2026")` → nhớ lại research cũ
 
-## WebSearch / Tavily (Primary)
+## Web Search (Primary — cho research)
 
-- Research chuyên sâu: tìm nguồn chính thống, báo cáo mới, tin tức ngành
-- So sánh quốc tế: tìm case study từ nhiều nước
-- Verify thông tin: cross-check tin từ nhiều nguồn
+| Tool | Mục đích |
+|------|----------|
+| `web_search` | Tìm nguồn chính thống, tin tức ngành, báo cáo mới (dùng Tavily, fallback Gemini) |
+| `web_fetch` | Đọc nội dung trang web cụ thể (chuyển HTML → Markdown) |
+
+### Lưu ý khi dùng web tools
+
+- `web_search` → tìm links + tóm tắt → chọn link tốt → `web_fetch` → đọc chi tiết
+- Ghi rõ **nguồn + ngày + tổ chức** cho mọi thông tin tìm được
+- `web_fetch` không chạy JavaScript — nếu trang JS-heavy, thử tìm nguồn khác
+- Luôn cross-check tối thiểu 2 nguồn cho claim quan trọng
+
+## Inter-Agent Communication (sessions_send)
+
+| Hành động | Cách dùng |
+|-----------|-----------|
+| Gửi output cho Thư ký | `sessions_send(agentId="thu-ky-tieu-my", message="Đây là research tuần này...")` |
+| Trả lời yêu cầu sửa | `sessions_send(agentId="thu-ky-tieu-my", message="Đã bổ sung 3 signals...")` |

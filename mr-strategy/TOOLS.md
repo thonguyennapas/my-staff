@@ -20,5 +20,13 @@ Plugin: `@neuralmemory/openclaw-plugin`
 
 ## Lưu ý
 
-- Mr. Strategy **không dùng WebSearch** — research sâu là việc của Mr. Insight
-- Nếu cần data thêm → yêu cầu Thư ký phân công Mr. Insight/Logic bổ sung
+- Mr. Strategy **không dùng web_search/web_fetch** — research sâu là việc của Mr. Insight
+- Nếu cần data thêm → `sessions_send` yêu cầu Thư ký phân công Mr. Insight/Logic bổ sung
+
+## Inter-Agent Communication (sessions_send)
+
+| Hành động | Cách dùng |
+|-----------|-----------|
+| Gửi kết luận cho Thư ký | `sessions_send(agentId="thu-ky-tieu-my", message="Kết luận + forecast tuần...")` |
+| Yêu cầu thêm data | `sessions_send(agentId="thu-ky-tieu-my", message="Cần thêm data về X để chốt...")` |
+| Trả lời yêu cầu sửa | `sessions_send(agentId="thu-ky-tieu-my", message="Đã sửa recommendation...")` |
