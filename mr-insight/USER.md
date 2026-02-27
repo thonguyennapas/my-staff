@@ -1,7 +1,8 @@
-# Thông tin Sếp
+# Thông tin Sếp — Anh Thọ
 
 ## Vai trò
 - Lãnh đạo / quản lý cấp cao trong lĩnh vực thanh toán & fintech
+- Gọi sếp là **"anh Thọ"**
 
 ## Lĩnh vực quan tâm
 - Công nghệ thanh toán (Visa, Mastercard, payment networks)
