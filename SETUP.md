@@ -24,12 +24,11 @@ sudo apt-get install -y python3 python3-pip
 ### 1.2 Cài OpenClaw
 
 ```bash
-# Cài OpenClaw
 npm install -g openclaw@latest
-
-# Chạy onboarding wizard (hướng dẫn từng bước setup gateway, workspace, channels)
-openclaw onboard --install-daemon
 ```
+
+> ⚠️ **KHÔNG CẦN** chạy `openclaw onboard` — vì repo này đã có `openclaw.json` sẵn.
+> Wizard onboard chỉ dành cho ai chưa có config.
 
 ### 1.3 Clone repo
 
@@ -60,11 +59,15 @@ nano .env
 ### 1.5 Copy config vào OpenClaw
 
 ```bash
-# ⚠️ Backup config cũ trước khi copy (nếu đã có từ project khác)
+# Tạo thư mục OpenClaw (nếu chưa có)
+mkdir -p ~/.openclaw
+
+# Backup config cũ (nếu có)
 [ -f ~/.openclaw/openclaw.json ] && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak
 
-# Copy config
+# Copy config + env
 cp openclaw.json ~/.openclaw/openclaw.json
+cp .env ~/.openclaw/.env
 ```
 
 > **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — khi bạn sửa `~/.openclaw/openclaw.json`, Gateway tự reload config mà không cần restart.
@@ -72,12 +75,11 @@ cp openclaw.json ~/.openclaw/openclaw.json
 ### 1.6 Khởi động Gateway
 
 ```bash
-# Cách 1: Foreground (debug)
+# Cách 1: Foreground (để xem logs debug)
 openclaw gateway
 
 # Cách 2: Daemon (khuyến nghị — tự chạy khi VPS reboot)
-# Nếu đã chạy: openclaw onboard --install-daemon
-# Gateway chạy qua systemd (Linux) hoặc launchd (macOS)
+openclaw gateway install-daemon
 
 # Cách 3: pm2 (alternative)
 npm install -g pm2
