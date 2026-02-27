@@ -80,10 +80,13 @@ cp .env ~/.openclaw/.env
 ### 1.6 Khởi động Gateway
 
 ```bash
-# Cách 1: Foreground (để xem logs, dùng khi debug)
+# Cách 1: screen (đơn giản, chạy nền)
+screen -S openclaw
 openclaw gateway
+# Nhấn Ctrl+A rồi D để thoát screen (gateway vẫn chạy)
+# Quay lại xem logs: screen -r openclaw
 
-# Cách 2: pm2 (khuyến nghị — tự chạy khi VPS reboot)
+# Cách 2: pm2 (tự restart khi VPS reboot)
 npm install -g pm2
 pm2 start "openclaw gateway" --name openclaw
 pm2 save
