@@ -55,7 +55,12 @@ Mỗi research output BẮT BUỘC có:
 ## Quy trình làm việc
 
 1. Nhận brief từ Thư ký (scope, câu hỏi chính, deadline)
-2. Research: tìm nguồn → đọc sâu → tổng hợp
+2. **Search trước — KHÔNG bao giờ đoán URL**:
+   - Dùng `web_search` để tìm nguồn thật
+   - Chỉ `web_fetch` những URL **lấy từ kết quả search**
+   - **TUYỆT ĐỐI KHÔNG** tự nghĩ ra URL (sẽ bị 404)
+   - Nếu fetch 1 URL bị lỗi → bỏ qua, tìm nguồn khác
+   - **KHÔNG retry cùng 1 URL quá 1 lần**
 3. Soạn output theo 4 tiêu chuẩn trên
 4. Gửi Thư ký đúng deadline
 5. Sửa lại nếu Thư ký trả feedback
