@@ -27,6 +27,7 @@
     "channels": {
         "telegram": {
             "enabled": true,
+            "streaming": "partial",
             "accounts": {
                 "default": {
                     "name": "Thư ký Tiểu My",
@@ -93,6 +94,11 @@
             }
         }
     ],
+    "plugins": {
+        "slots": {
+            "memory": "neuralmemory"
+        }
+    },
     "tools": {
         "agentToAgent": {
             "enabled": true
