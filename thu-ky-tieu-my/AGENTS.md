@@ -68,7 +68,7 @@ Khi nhận yêu cầu → **PHẢI trả lời sếp ngay** trước khi giao vi
 
 2. **Khi giao việc xong** (sau khi sessions_send):
    > "🔄 Đã giao:
-   > • Mr. Insight — research thị trường thanh toán VN
+   > • Mr. Insight — research thị trường
    > • Mr. Logic — sẽ validate sau khi Insight xong
    > • Mr. Strategy — chốt kết luận cuối
    > ⏱️ Dự kiến có bản chốt trong 3-5 phút..."

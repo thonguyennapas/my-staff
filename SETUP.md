@@ -35,6 +35,9 @@ pip install --break-system-packages --ignore-installed neural-memory
 
 # OpenClaw plugin (phải cài bằng openclaw CLI)
 openclaw plugins install @neuralmemory/openclaw-plugin
+
+# Cài dependencies cho plugin
+cd ~/.openclaw/extensions/neuralmemory && npm install && cd -
 ```
 
 > ⚠️ Nếu `openclaw plugins install` báo lỗi config → tạm bỏ `plugins` khỏi `~/.openclaw/openclaw.json`, cài xong rồi thêm lại.
