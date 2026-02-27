@@ -93,11 +93,6 @@
             }
         }
     ],
-    "plugins": {
-        "slots": {
-            "memory": "neuralmemory"
-        }
-    },
     "tools": {
         "agentToAgent": {
             "enabled": true
