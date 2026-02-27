@@ -1,0 +1,93 @@
+{
+    "plugins": {
+        "slots": {
+            "memory": "neuralmemory"
+        },
+        "entries": {
+            "neuralmemory": {
+                "config": {
+                    "pythonPath": "python3",
+                    "brain": "my-staff",
+                    "autoContext": true,
+                    "autoCapture": true,
+                    "contextDepth": 1,
+                    "maxContextTokens": 500,
+                    "timeout": 30000
+                }
+            }
+        }
+    },
+    "agents": [
+        {
+            "id": "thu-ky-tieu-my",
+            "name": "Thư ký Tiểu My",
+            "workspace": "./my-staff/thu-ky-tieu-my",
+            "model": "sonnet"
+        },
+        {
+            "id": "mr-insight",
+            "name": "Mr. Insight",
+            "workspace": "./my-staff/mr-insight",
+            "model": "sonnet"
+        },
+        {
+            "id": "mr-logic",
+            "name": "Mr. Logic",
+            "workspace": "./my-staff/mr-logic",
+            "model": "sonnet"
+        },
+        {
+            "id": "mr-strategy",
+            "name": "Mr. Strategy",
+            "workspace": "./my-staff/mr-strategy",
+            "model": "sonnet"
+        }
+    ],
+    "channels": {
+        "telegram": {
+            "enabled": true,
+            "bots": [
+                {
+                    "token": "${TELEGRAM_TIEU_MY_TOKEN}",
+                    "agentId": "thu-ky-tieu-my",
+                    "allowlist": [
+                        "${TELEGRAM_OWNER_ID}"
+                    ]
+                },
+                {
+                    "token": "${TELEGRAM_INSIGHT_TOKEN}",
+                    "agentId": "mr-insight",
+                    "allowlist": [
+                        "${TELEGRAM_OWNER_ID}"
+                    ]
+                },
+                {
+                    "token": "${TELEGRAM_LOGIC_TOKEN}",
+                    "agentId": "mr-logic",
+                    "allowlist": [
+                        "${TELEGRAM_OWNER_ID}"
+                    ]
+                },
+                {
+                    "token": "${TELEGRAM_STRATEGY_TOKEN}",
+                    "agentId": "mr-strategy",
+                    "allowlist": [
+                        "${TELEGRAM_OWNER_ID}"
+                    ]
+                }
+            ]
+        }
+    },
+    "cron": {
+        "jobs": [
+            {
+                "id": "weekly-market-digest",
+                "name": "Điểm tin thị trường hàng tuần",
+                "schedule": "0 8 * * 4",
+                "agentId": "thu-ky-tieu-my",
+                "isolated": true,
+                "prompt": "Bắt đầu quy trình 'Điểm tin thị trường hàng tuần':\n\n1. Chốt scope tuần này (ưu tiên: công nghệ thanh toán, Visa/Mastercard, CBDC, blockchain, agentic commerce, VN fintech)\n2. Phân công Mr. Insight gom tin + signals + link\n3. Phân công Mr. Logic validate + confidence + risks + falsifiers\n4. Phân công Mr. Strategy kết luận + forecast + đề xuất\n5. Đóng gói thành 01 bản gửi sếp với đủ 4 phần:\n   - (1) Điểm tin có link (10-20 tin)\n   - (2) Kết luận tuần (3 kết luận chính)\n   - (3) Dự đoán/xu hướng (nếu có)\n   - (4) Đề xuất (nếu cần)\n\nNếu chưa đủ bằng chứng để dự đoán, ghi rõ: chưa đủ bằng chứng, tuần sau cần theo dõi gì."
+            }
+        ]
+    }
+}
