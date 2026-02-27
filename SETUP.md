@@ -12,26 +12,23 @@
 # Kiểm tra Node.js (cần v22+)
 node --version
 
-# Kiểm tra Python (cần 3.11+)
-python3 --version
-
 # Nếu chưa có, cài Node.js
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Nếu chưa có Python 3.11+
+# Nếu cần NeuralMemory — cài Python 3.11+
+python3 --version
 sudo apt-get install -y python3 python3-pip
 ```
 
-### 1.2 Cài OpenClaw + NeuralMemory
+### 1.2 Cài OpenClaw
 
 ```bash
 # Cài OpenClaw
-npm install -g @anthropic-ai/openclaw
+npm install -g openclaw@latest
 
-# Cài NeuralMemory
-pip install neural-memory
-npm install -g @neuralmemory/openclaw-plugin
+# Chạy onboarding wizard (hướng dẫn từng bước setup gateway, workspace, channels)
+openclaw onboard --install-daemon
 ```
 
 ### 1.3 Clone repo
@@ -52,107 +49,113 @@ nano .env
 
 | Variable | Nguồn |
 |----------|-------|
+| `STAFF_HOME` | Đường dẫn tuyệt đối (VD: `/root/my-staff`) |
 | `TELEGRAM_TIEU_MY_TOKEN` | BotFather → `@Tho_TieuMyBot` |
 | `TELEGRAM_INSIGHT_TOKEN` | BotFather → `@Tho_MrInsightBot` |
 | `TELEGRAM_LOGIC_TOKEN` | BotFather → `@Tho_MrLogicBot` |
 | `TELEGRAM_STRATEGY_TOKEN` | BotFather → `@Tho_MrStrategyBot` |
 | `TELEGRAM_OWNER_ID` | Gửi `/start` cho `@userinfobot` |
-| `TAVILY_API_KEY` | [tavily.com](https://tavily.com) |
 | `GOOGLE_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) |
-| `STAFF_HOME` | Đường dẫn tuyệt đối tới thư mục my-staff (VD: `/root/my-staff`) |
 
-### 1.5 Load environment + Setup OpenClaw
+### 1.5 Copy config vào OpenClaw
 
 ```bash
-# Load .env
-export $(cat .env | xargs)
-
-# Khởi tạo OpenClaw (tạo ~/.openclaw/ nếu chưa có)
-openclaw setup
-
 # ⚠️ Backup config cũ trước khi copy (nếu đã có từ project khác)
 [ -f ~/.openclaw/openclaw.json ] && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak
 
-# Copy config vào OpenClaw home
+# Copy config
 cp openclaw.json ~/.openclaw/openclaw.json
-
-# Đăng ký 4 agents
-openclaw agents add thu-ky-tieu-my --workspace ./thu-ky-tieu-my
-openclaw agents add mr-insight --workspace ./mr-insight
-openclaw agents add mr-logic --workspace ./mr-logic
-openclaw agents add mr-strategy --workspace ./mr-strategy
 ```
+
+> **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — khi bạn sửa `~/.openclaw/openclaw.json`, Gateway tự reload config mà không cần restart.
 
 ### 1.6 Khởi động Gateway
 
 ```bash
-# Chạy OpenClaw Gateway (chọn 1 trong 2 cách)
-
-# Cách 1: Chạy foreground (để debug)
+# Cách 1: Foreground (debug)
 openclaw gateway
 
-# Cách 2: Chạy background với pm2 (khuyến nghị cho production)
+# Cách 2: Daemon (khuyến nghị — tự chạy khi VPS reboot)
+# Nếu đã chạy: openclaw onboard --install-daemon
+# Gateway chạy qua systemd (Linux) hoặc launchd (macOS)
+
+# Cách 3: pm2 (alternative)
 npm install -g pm2
 pm2 start "openclaw gateway" --name openclaw
-pm2 save
-pm2 startup  # tự chạy lại khi VPS restart
+pm2 save && pm2 startup
 ```
 
-### 1.7 Pairing Telegram
+### 1.7 Pairing Telegram (4 bots)
 
 ```bash
-# Mở Telegram → tìm từng bot → gửi /start
-# OpenClaw Gateway sẽ log pairing code → approve trong terminal
+# Mở Telegram → gửi /start cho từng bot:
+# 1. @Tho_TieuMyBot → /start
+# 2. @Tho_MrInsightBot → /start
+# 3. @Tho_MrLogicBot → /start
+# 4. @Tho_MrStrategyBot → /start
 
-# Thứ tự pair:
-# 1. @Tho_TieuMyBot → /start → approve
-# 2. @Tho_MrInsightBot → /start → approve
-# 3. @Tho_MrLogicBot → /start → approve
-# 4. @Tho_MrStrategyBot → /start → approve
+# Approve pairing cho từng bot
+openclaw pairing list telegram
+openclaw pairing approve telegram <CODE_1>
+openclaw pairing approve telegram <CODE_2>
+openclaw pairing approve telegram <CODE_3>
+openclaw pairing approve telegram <CODE_4>
 ```
 
-### 1.8 Verify
+### 1.8 Tạo Cron Job (điểm tin hàng tuần)
 
 ```bash
-# Kiểm tra agents
-openclaw agents list
+openclaw cron add \
+  --name "Điểm tin thị trường hàng tuần" \
+  --cron "0 8 * * 4" \
+  --tz "Asia/Ho_Chi_Minh" \
+  --session isolated \
+  --agent thu-ky-tieu-my \
+  --message "Bắt đầu quy trình 'Điểm tin thị trường hàng tuần':
+
+1. Chốt scope tuần này (ưu tiên: công nghệ thanh toán, Visa/Mastercard, CBDC, blockchain, agentic commerce, VN fintech)
+2. Phân công Mr. Insight gom tin + signals + link
+3. Phân công Mr. Logic validate + confidence + risks + falsifiers
+4. Phân công Mr. Strategy kết luận + forecast + đề xuất
+5. Đóng gói thành 01 bản gửi sếp với đủ 4 phần:
+   - (1) Điểm tin có link (10-20 tin)
+   - (2) Kết luận tuần (3 kết luận chính)
+   - (3) Dự đoán/xu hướng (nếu có)
+   - (4) Đề xuất (nếu cần)
+
+Nếu chưa đủ bằng chứng để dự đoán, ghi rõ: chưa đủ bằng chứng, tuần sau cần theo dõi gì." \
+  --announce \
+  --channel telegram \
+  --to "${TELEGRAM_OWNER_ID}"
+```
+
+### 1.9 Verify
+
+```bash
+# Chạy doctor — kiểm tra toàn bộ config, channels, DM policies
+openclaw doctor
+
+# Kiểm tra status
+openclaw status
 
 # Kiểm tra cron jobs
 openclaw cron list
 
-# Kiểm tra Telegram channels
-openclaw channels status
-
-# Test: gửi tin nhắn cho @Tho_TieuMyBot trên Telegram
-# → Agent nên phản hồi
+# Test: gửi tin nhắn cho @Tho_TieuMyBot trên Telegram → Agent phản hồi
 ```
 
 ---
 
 ## PHẦN 2: Cập nhật
 
-> Dùng mỗi khi cần update OpenClaw hoặc chỉnh sửa nhân viên.
-
-### 2.1 Update OpenClaw (khi có phiên bản mới)
+### 2.1 Update OpenClaw
 
 ```bash
-# Dừng Gateway trước
-pm2 stop openclaw
-
-# Update OpenClaw
-npm update -g @anthropic-ai/openclaw
-
-# Update NeuralMemory (nếu cần)
-pip install --upgrade neural-memory
-npm update -g @neuralmemory/openclaw-plugin
-
-# Khởi động lại
-pm2 start openclaw
+npm update -g openclaw@latest
+openclaw doctor  # kiểm tra migrations
 ```
 
-### 2.2 Update code my-staff (khi chỉnh sửa nhân viên)
-
-Sau khi bạn chỉnh sửa agent files trên local → push lên GitHub:
+### 2.2 Update my-staff (khi chỉnh sửa agent)
 
 ```bash
 # === Trên máy local (Windows) ===
@@ -160,54 +163,20 @@ cd my-staff
 git add -A
 git commit -m "update: chỉnh sửa agent XYZ"
 git push origin main
-```
 
-```bash
 # === Trên VPS ===
 cd my-staff
-
-# Pull code mới
 git pull origin main
-
-# Copy config mới (nếu openclaw.json thay đổi)
 cp openclaw.json ~/.openclaw/openclaw.json
-
-# Restart Gateway để load config mới
-pm2 restart openclaw
+# Gateway tự hot-reload config
 ```
 
-### 2.3 Thêm/sửa cron job
+### 2.3 Quản lý cron job
 
 ```bash
-# Xem danh sách cron hiện tại
-openclaw cron list
-
-# Sửa cron (VD: đổi giờ chạy)
-openclaw cron edit weekly-market-digest --cron "0 9 * * 4"
-
-# Thêm cron mới
-openclaw cron add \
-  --cron "0 8 * * 1" \
-  --agent thu-ky-tieu-my \
-  --isolated \
-  --prompt "Bản tổng hợp đầu tuần..."
-```
-
-### 2.4 Thêm agent mới
-
-```bash
-# 1. Tạo folder workspace mới trên local
-mkdir new-agent
-# Tạo 5 files: IDENTITY.md, SOUL.md, AGENTS.md, USER.md, TOOLS.md
-
-# 2. Push lên GitHub
-git add -A && git commit -m "feat: add new agent" && git push
-
-# 3. Trên VPS
-git pull origin main
-openclaw agents add new-agent --workspace ./new-agent
-
-# 4. Nếu cần Telegram bot → tạo bot mới trên BotFather → thêm token vào .env + openclaw.json
+openclaw cron list                    # Xem danh sách
+openclaw cron run <job-id>            # Chạy thủ công để test
+openclaw cron runs --id <job-id>      # Xem lịch sử chạy
 ```
 
 ---
@@ -216,8 +185,33 @@ openclaw agents add new-agent --workspace ./new-agent
 
 | Kênh | Cách dùng |
 |------|-----------|
-| Chat `@Tho_TieuMyBot` | Giao việc cho Thư ký → Thư ký tự điều phối team |
-| Chat `@Tho_MrInsightBot` | Hỏi trực tiếp Mr. Insight về research/signals |
-| Chat `@Tho_MrLogicBot` | Hỏi trực tiếp Mr. Logic về validation/risk |
-| Chat `@Tho_MrStrategyBot` | Hỏi trực tiếp Mr. Strategy về kết luận/forecast |
-| Cron (tự động) | Mỗi thứ 5, 8AM → Thư ký tự chạy → gửi kết quả qua Telegram |
+| `@Tho_TieuMyBot` | Giao việc cho Thư ký → tự điều phối team |
+| `@Tho_MrInsightBot` | Hỏi trực tiếp Mr. Insight về research/signals |
+| `@Tho_MrLogicBot` | Hỏi trực tiếp Mr. Logic về validation/risk |
+| `@Tho_MrStrategyBot` | Hỏi trực tiếp Mr. Strategy về kết luận/forecast |
+| Cron (tự động) | Mỗi thứ 5, 8AM (giờ VN) → Thư ký tự chạy |
+
+### Chat commands (trong Telegram)
+
+| Command | Mô tả |
+|---------|-------|
+| `/status` | Xem session status (model + tokens) |
+| `/new` hoặc `/reset` | Reset session |
+| `/compact` | Compact session context |
+
+---
+
+## Kiến trúc multi-agent
+
+```
+channels.telegram.accounts:
+  default (Tiểu My)  ──binding──► agent: thu-ky-tieu-my
+  insight             ──binding──► agent: mr-insight
+  logic               ──binding──► agent: mr-logic
+  strategy            ──binding──► agent: mr-strategy
+
+Inter-agent communication:
+  Thư ký ──sessions_send──► Mr. Insight / Mr. Logic / Mr. Strategy
+```
+
+Mỗi agent có workspace riêng (`IDENTITY.md`, `SOUL.md`, `AGENTS.md`, `USER.md`, `TOOLS.md`) và session độc lập.
