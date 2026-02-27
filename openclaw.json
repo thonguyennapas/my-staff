@@ -22,25 +22,25 @@
             "id": "thu-ky-tieu-my",
             "name": "Thư ký Tiểu My",
             "workspace": "./my-staff/thu-ky-tieu-my",
-            "model": "sonnet"
+            "model": "${TIEU_MY_MODEL}"
         },
         {
             "id": "mr-insight",
             "name": "Mr. Insight",
             "workspace": "./my-staff/mr-insight",
-            "model": "sonnet"
+            "model": "${INSIGHT_MODEL}"
         },
         {
             "id": "mr-logic",
             "name": "Mr. Logic",
             "workspace": "./my-staff/mr-logic",
-            "model": "sonnet"
+            "model": "${LOGIC_MODEL}"
         },
         {
             "id": "mr-strategy",
             "name": "Mr. Strategy",
             "workspace": "./my-staff/mr-strategy",
-            "model": "sonnet"
+            "model": "${STRATEGY_MODEL}"
         }
     ],
     "channels": {

@@ -40,7 +40,7 @@ Cần điền:
 - `TELEGRAM_LOGIC_TOKEN` — token cho `@Tho_MrLogicBot`
 - `TELEGRAM_STRATEGY_TOKEN` — token cho `@Tho_MrStrategyBot`
 - `TELEGRAM_OWNER_ID` — Telegram User ID của bạn (gửi `/start` cho `@userinfobot` để lấy)
-- `ANTHROPIC_API_KEY` — API key Claude
+- `GOOGLE_API_KEY` — API key Google Gemini
 
 ## Bước 4: Load environment
 
