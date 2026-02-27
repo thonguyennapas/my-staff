@@ -16,7 +16,7 @@ node --version
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Nếu cần NeuralMemory — cài Python 3.11+
+# Python 3.11+ (cho NeuralMemory)
 python3 --version
 sudo apt-get install -y python3 python3-pip
 ```
@@ -28,12 +28,9 @@ sudo apt-get install -y python3 python3-pip
 npm install -g openclaw@latest
 
 # Cài NeuralMemory (plugin memory cho OpenClaw)
-pip install neural-memory
+pip install --break-system-packages neural-memory
 npm install -g @neuralmemory/openclaw-plugin
 ```
-
-> ⚠️ **KHÔNG CẦN** chạy `openclaw onboard` — vì repo này đã có `openclaw.json` sẵn.
-> Wizard onboard chỉ dành cho ai chưa có config.
 
 ### 1.3 Clone repo
 
@@ -61,23 +58,39 @@ nano .env
 | `TELEGRAM_OWNER_ID` | Gửi `/start` cho `@userinfobot` |
 | `GOOGLE_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) |
 
-### 1.5 Copy config vào OpenClaw
+### 1.5 Setup auth (API key) — bắt buộc
 
 ```bash
-# Tạo thư mục OpenClaw (nếu chưa có)
-mkdir -p ~/.openclaw
-
-# Backup config cũ (nếu có)
-[ -f ~/.openclaw/openclaw.json ] && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak
-
-# Copy config + env
-cp openclaw.json ~/.openclaw/openclaw.json
-cp .env ~/.openclaw/.env
+# Chạy configure wizard — chọn:
+# 1. Local (this machine)
+# 2. Google/Gemini
+# 3. Dán GOOGLE_API_KEY
+openclaw configure
 ```
 
-> **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — khi bạn sửa `~/.openclaw/openclaw.json`, Gateway tự reload config mà không cần restart.
+> ⚠️ **Bước này bắt buộc** — wizard tạo `auth-profiles.json` đúng format cho main agent.
 
-### 1.6 Khởi động Gateway
+### 1.6 Sync auth cho tất cả agents
+
+```bash
+# Copy auth từ main agent → 4 agents custom
+chmod +x scripts/sync-auth.sh
+bash scripts/sync-auth.sh
+```
+
+> Sau này đổi API key: chạy `openclaw configure` lại → rồi `bash scripts/sync-auth.sh`
+
+### 1.7 Copy config vào OpenClaw
+
+```bash
+mkdir -p ~/.openclaw
+cp .env ~/.openclaw/.env
+cp openclaw.json ~/.openclaw/openclaw.json
+```
+
+> **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — sửa `~/.openclaw/openclaw.json` thì Gateway tự reload.
+
+### 1.8 Khởi động Gateway
 
 ```bash
 # Cách 1: screen (đơn giản, chạy nền)
@@ -93,7 +106,7 @@ pm2 save
 pm2 startup  # tạo script tự chạy khi VPS reboot
 ```
 
-### 1.7 Pairing Telegram (4 bots)
+### 1.9 Pairing Telegram (4 bots)
 
 ```bash
 # Mở Telegram → gửi /start cho từng bot:
@@ -102,15 +115,12 @@ pm2 startup  # tạo script tự chạy khi VPS reboot
 # 3. @Tho_MrLogicBot → /start
 # 4. @Tho_MrStrategyBot → /start
 
-# Approve pairing cho từng bot
+# Approve pairing (nếu dùng dmPolicy: pairing)
 openclaw pairing list telegram
-openclaw pairing approve telegram <CODE_1>
-openclaw pairing approve telegram <CODE_2>
-openclaw pairing approve telegram <CODE_3>
-openclaw pairing approve telegram <CODE_4>
+openclaw pairing approve telegram <CODE>
 ```
 
-### 1.8 Tạo Cron Job (điểm tin hàng tuần)
+### 1.10 Tạo Cron Job (điểm tin hàng tuần)
 
 ```bash
 openclaw cron add \
@@ -137,19 +147,14 @@ Nếu chưa đủ bằng chứng để dự đoán, ghi rõ: chưa đủ bằng 
   --to "${TELEGRAM_OWNER_ID}"
 ```
 
-### 1.9 Verify
+### 1.11 Verify
 
 ```bash
-# Chạy doctor — kiểm tra toàn bộ config, channels, DM policies
-openclaw doctor
+openclaw doctor           # kiểm tra config
+openclaw status           # kiểm tra gateway
+openclaw cron list        # kiểm tra cron
 
-# Kiểm tra status
-openclaw status
-
-# Kiểm tra cron jobs
-openclaw cron list
-
-# Test: gửi tin nhắn cho @Tho_TieuMyBot trên Telegram → Agent phản hồi
+# Test: gửi tin nhắn cho @Tho_TieuMyBot → Agent phản hồi
 ```
 
 ---
@@ -160,7 +165,7 @@ openclaw cron list
 
 ```bash
 npm update -g openclaw@latest
-openclaw doctor  # kiểm tra migrations
+openclaw doctor
 ```
 
 ### 2.2 Update my-staff (khi chỉnh sửa agent)
@@ -173,13 +178,28 @@ git commit -m "update: chỉnh sửa agent XYZ"
 git push origin main
 
 # === Trên VPS ===
-cd my-staff
+cd ~/my-staff
 git pull origin main
 cp openclaw.json ~/.openclaw/openclaw.json
 # Gateway tự hot-reload config
 ```
 
-### 2.3 Quản lý cron job
+### 2.3 Đổi API key
+
+```bash
+# 1. Chạy configure lại
+openclaw configure
+
+# 2. Sync auth cho tất cả agents
+bash ~/my-staff/scripts/sync-auth.sh
+
+# 3. Restart gateway
+pkill -f openclaw-gateway
+screen -S openclaw
+openclaw gateway
+```
+
+### 2.4 Quản lý cron job
 
 ```bash
 openclaw cron list                    # Xem danh sách
@@ -206,6 +226,7 @@ openclaw cron runs --id <job-id>      # Xem lịch sử chạy
 | `/status` | Xem session status (model + tokens) |
 | `/new` hoặc `/reset` | Reset session |
 | `/compact` | Compact session context |
+| `/model` | Xem/đổi model |
 
 ---
 
@@ -218,7 +239,7 @@ channels.telegram.accounts:
   logic               ──binding──► agent: mr-logic
   strategy            ──binding──► agent: mr-strategy
 
-Inter-agent communication:
+Inter-agent communication (sessions_send):
   Thư ký ──sessions_send──► Mr. Insight / Mr. Logic / Mr. Strategy
 ```
 
