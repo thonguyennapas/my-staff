@@ -130,9 +130,43 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-### 1.11 Tạo Cron Job (điểm tin hàng tuần)
+### 1.11 Tạo Cron Job
+
+**Bước 1: Test daily trước (8AM mỗi ngày)**
 
 ```bash
+openclaw cron add \
+  --name "Test điểm tin hàng ngày" \
+  --cron "0 8 * * *" \
+  --tz "Asia/Ho_Chi_Minh" \
+  --session isolated \
+  --agent thu-ky-tieu-my \
+  --message "Bắt đầu quy trình 'Điểm tin thị trường hàng ngày' (chế độ test):
+
+1. Chốt scope hôm nay (ưu tiên: công nghệ thanh toán, Visa/Mastercard, CBDC, blockchain, agentic commerce, VN fintech)
+2. Phân công Mr. Insight gom tin + signals + link
+3. Phân công Mr. Logic validate + confidence + risks
+4. Phân công Mr. Strategy kết luận + forecast + đề xuất
+5. Đóng gói thành 01 bản gửi sếp với đủ 4 phần:
+   - (1) Điểm tin có link (5-10 tin)
+   - (2) Kết luận ngày (2-3 kết luận chính)
+   - (3) Xu hướng (nếu có)
+   - (4) Đề xuất (nếu cần)
+
+Lưu ý: đây là bản test daily, ngắn gọn hơn bản weekly." \
+  --announce \
+  --channel telegram \
+  --to "${TELEGRAM_OWNER_ID}"
+```
+
+**Bước 2: Khi ổn định → chuyển sang weekly thứ 5**
+
+```bash
+# Xóa cron test daily
+openclaw cron list
+openclaw cron remove <daily-job-id>
+
+# Tạo cron weekly chính thức (thứ 5, 8AM)
 openclaw cron add \
   --name "Điểm tin thị trường hàng tuần" \
   --cron "0 8 * * 4" \
@@ -157,7 +191,7 @@ Nếu chưa đủ bằng chứng để dự đoán, ghi rõ: chưa đủ bằng 
   --to "${TELEGRAM_OWNER_ID}"
 ```
 
-### 1.11 Verify
+### 1.12 Verify
 
 ```bash
 openclaw doctor           # kiểm tra config
