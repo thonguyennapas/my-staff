@@ -106,5 +106,8 @@
     },
     "session": {
         "dmScope": "per-account-channel-peer"
+    },
+    "gateway": {
+        "mode": "local"
     }
 }
