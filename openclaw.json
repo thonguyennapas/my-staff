@@ -96,15 +96,6 @@
     "plugins": {
         "slots": {
             "memory": "neuralmemory"
-        },
-        "entries": {
-            "neuralmemory": {
-                "enabled": true,
-                "config": {
-                    "pythonPath": "python3",
-                    "brain": "my-staff"
-                }
-            }
         }
     },
     "tools": {

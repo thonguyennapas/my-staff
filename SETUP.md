@@ -21,10 +21,15 @@ python3 --version
 sudo apt-get install -y python3 python3-pip
 ```
 
-### 1.2 Cài OpenClaw
+### 1.2 Cài OpenClaw + NeuralMemory
 
 ```bash
+# Cài OpenClaw
 npm install -g openclaw@latest
+
+# Cài NeuralMemory (plugin memory cho OpenClaw)
+pip install neural-memory
+npm install -g @neuralmemory/openclaw-plugin
 ```
 
 > ⚠️ **KHÔNG CẦN** chạy `openclaw onboard` — vì repo này đã có `openclaw.json` sẵn.
@@ -75,16 +80,14 @@ cp .env ~/.openclaw/.env
 ### 1.6 Khởi động Gateway
 
 ```bash
-# Cách 1: Foreground (để xem logs debug)
+# Cách 1: Foreground (để xem logs, dùng khi debug)
 openclaw gateway
 
-# Cách 2: Daemon (khuyến nghị — tự chạy khi VPS reboot)
-openclaw gateway install-daemon
-
-# Cách 3: pm2 (alternative)
+# Cách 2: pm2 (khuyến nghị — tự chạy khi VPS reboot)
 npm install -g pm2
 pm2 start "openclaw gateway" --name openclaw
-pm2 save && pm2 startup
+pm2 save
+pm2 startup  # tạo script tự chạy khi VPS reboot
 ```
 
 ### 1.7 Pairing Telegram (4 bots)
