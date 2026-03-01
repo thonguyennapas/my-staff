@@ -38,5 +38,5 @@ Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
 
 | Hành động | Cách dùng |
 |-----------|-----------|
-| Gửi output cho Thư ký | `sessions_send(agentId="thu-ky-tieu-my", message="Validation results...")` |
-| Trả lời yêu cầu bổ sung | `sessions_send(agentId="thu-ky-tieu-my", message="Đã bổ sung confidence...")` |
+| Gửi output cho Thư ký | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Validation results...")` |
+| Trả lời yêu cầu bổ sung | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Đã bổ sung confidence...")` |

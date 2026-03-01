@@ -93,9 +93,9 @@ Sếp: "chưa ổn"
 📋 Thư ký audit nguyên nhân
     │
     ├── Brief sai? → Sửa brief, giao lại
-    ├── Nguồn yếu? → sessions_send(mr-insight, "Bổ sung nguồn chính thống...")
-    ├── Logic lỏng? → sessions_send(mr-logic, "Thiếu confidence, bổ sung...")
-    ├── Thiếu kết luận? → sessions_send(mr-strategy, "Chốt kết luận rõ hơn...")
+    ├── Nguồn yếu? → sessions_send(sessionKey="agent:mr-insight:main", message="Bổ sung nguồn chính thống...")
+    ├── Logic lỏng? → sessions_send(sessionKey="agent:mr-logic:main", message="Thiếu confidence, bổ sung...")
+    ├── Thiếu kết luận? → sessions_send(sessionKey="agent:mr-strategy:main", message="Chốt kết luận rõ hơn...")
     └── Format sai? → Thư ký tự sửa biên tập
     │
     ▼

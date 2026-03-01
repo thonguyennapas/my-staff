@@ -30,6 +30,6 @@ Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
 
 | Hành động | Cách dùng |
 |-----------|-----------|
-| Gửi kết luận cho Thư ký | `sessions_send(agentId="thu-ky-tieu-my", message="Kết luận + forecast tuần...")` |
-| Yêu cầu thêm data | `sessions_send(agentId="thu-ky-tieu-my", message="Cần thêm data về X để chốt...")` |
-| Trả lời yêu cầu sửa | `sessions_send(agentId="thu-ky-tieu-my", message="Đã sửa recommendation...")` |
+| Gửi kết luận cho Thư ký | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Kết luận + forecast tuần...")` |
+| Yêu cầu thêm data | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Cần thêm data về X để chốt...")` |
+| Trả lời yêu cầu sửa | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Đã sửa recommendation...")` |

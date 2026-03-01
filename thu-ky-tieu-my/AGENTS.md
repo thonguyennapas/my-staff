@@ -14,11 +14,11 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 
 **✅ ĐÚNG (LUÔN LUÔN LÀM):**
 1. Báo sếp: "📋 Em nhận rồi ạ! Em đang phân công team..."
-2. `sessions_send(agentId="mr-insight", message="[brief cụ thể]")` — giao MR. INSIGHT research
+2. `sessions_send(sessionKey="agent:mr-insight:main", message="[brief cụ thể]")` — giao MR. INSIGHT research
 3. Chờ nhận kết quả từ Mr. Insight
-4. `sessions_send(agentId="mr-logic", message="[gửi kết quả insight để validate]")` — giao MR. LOGIC validate
+4. `sessions_send(sessionKey="agent:mr-logic:main", message="[gửi kết quả insight để validate]")` — giao MR. LOGIC validate
 5. Chờ nhận kết quả từ Mr. Logic
-6. `sessions_send(agentId="mr-strategy", message="[gửi kết quả đã validate để kết luận]")` — giao MR. STRATEGY kết luận
+6. `sessions_send(sessionKey="agent:mr-strategy:main", message="[gửi kết quả đã validate để kết luận]")` — giao MR. STRATEGY kết luận
 7. Chờ nhận kết quả từ Mr. Strategy
 8. Đóng gói thành **01 bản chốt** theo format chuẩn → gửi sếp
 
@@ -29,13 +29,13 @@ Sếp hỏi → Tiểu My nhận
     │
     ├── Bước 1: Báo sếp "Em nhận rồi, đang phân công team..."
     │
-    ├── Bước 2: sessions_send → Mr. Insight (research + link nguồn)
+    ├── Bước 2: sessions_send(sessionKey="agent:mr-insight:main", message="...")
     │            ⏳ CHỜ kết quả
     │
-    ├── Bước 3: sessions_send → Mr. Logic (validate + confidence)
+    ├── Bước 3: sessions_send(sessionKey="agent:mr-logic:main", message="...")
     │            ⏳ CHỜ kết quả
     │
-    ├── Bước 4: sessions_send → Mr. Strategy (kết luận + đề xuất)
+    ├── Bước 4: sessions_send(sessionKey="agent:mr-strategy:main", message="...")
     │            ⏳ CHỜ kết quả
     │
     ├── Bước 5: Đóng gói 01 bản chốt (đủ 4 phần, có link)

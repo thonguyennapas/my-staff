@@ -4,7 +4,7 @@
 
 Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
 
-> **Lưu ý quan trọng**: Mem0 có **Auto-recall** (tự nhớ lại context trước khi respond) và **Auto-capture** (tự lưu memories sau mỗi cuộc trò chuyện). Không cần gọi tool thủ công cho đa số trường hợp — hệ thống tự lo.
+> **Auto-recall** tự inject context trước khi respond. **Auto-capture** tự lưu sau mỗi exchange. Chỉ cần gọi tool thủ công khi muốn lưu/tìm cụ thể.
 
 ### Tools khi cần thao tác thủ công
 
@@ -16,46 +16,39 @@ Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
 | `memory_get` | Xem chi tiết 1 memory cụ thể |
 | `memory_forget` | Xoá memory không còn đúng/cần thiết |
 
-### Cách sử dụng chính
+## Inter-Agent Communication (sessions_send) — QUAN TRỌNG
 
-- **Decision log**: `memory_store("Sếp chốt: triển khai PoC CBDC Q2")`
-- **Watchlist**: `memory_store("Theo dõi: PBOC digital yuan pilot mở rộng")`
-- **Quality update**: `memory_store("Bổ sung checklist: yêu cầu confidence level cho mọi claim")`
-- **Search**: `memory_search("quyết định về CBDC tuần trước")` → nhớ lại context
-- **Quên**: `memory_forget(id)` → xoá memory sai/cũ
+Thư ký PHẢI dùng `sessions_send` để giao việc cho team. **KHÔNG tự làm chuyên môn.**
 
-### Auto-recall & Auto-capture (tự động)
+### Session Keys
 
-- ✅ **Trước khi respond** → Mem0 tự tìm memories liên quan → inject vào context
-- ✅ **Sau khi respond** → Mem0 tự trích xuất facts, decisions, preferences → lưu lại
-- → Agent không cần gọi tool nhớ thủ công cho đa số trường hợp
+| Agent | sessionKey |
+|-------|-----------|
+| Mr. Insight | `agent:mr-insight:main` |
+| Mr. Logic | `agent:mr-logic:main` |
+| Mr. Strategy | `agent:mr-strategy:main` |
 
-## Web Search (Secondary)
+### Cú pháp sessions_send
 
-| Tool | Mục đích |
-|------|----------|
-| `web_search` | Kiểm tra nhanh thông tin khi cần verify trước khi đóng gói |
-| `web_fetch` | Đọc nội dung trang web cụ thể nếu cần check nguồn |
+```
+sessions_send(sessionKey="agent:mr-insight:main", message="...", timeoutSeconds=120)
+```
 
-- Không dùng để research sâu (để Mr. Insight)
-
-## Inter-Agent Communication (sessions_send)
-
-Thư ký có thể **gửi tin nhắn trực tiếp** cho các thành viên team:
+### Ví dụ giao việc
 
 | Hành động | Cách dùng |
 |-----------|-----------|
-| Giao việc cho Mr. Insight | `sessions_send(agentId="mr-insight", message="Gom tin CBDC tuần này...")` |
-| Yêu cầu Mr. Logic validate | `sessions_send(agentId="mr-logic", message="Validate 5 tin này...")` |
-| Yêu cầu Mr. Strategy kết luận | `sessions_send(agentId="mr-strategy", message="Chốt kết luận tuần...")` |
-| Trả lại sửa | `sessions_send(agentId="mr-insight", message="Thiếu signals, bổ sung 3 tín hiệu...")` |
+| Giao Insight research | `sessions_send(sessionKey="agent:mr-insight:main", message="Research tin thanh toán thế giới tuần này, cần link nguồn cho mỗi tin")` |
+| Giao Logic validate | `sessions_send(sessionKey="agent:mr-logic:main", message="Validate 5 tin này: [paste kết quả insight]. Cần confidence level + risk")` |
+| Giao Strategy kết luận | `sessions_send(sessionKey="agent:mr-strategy:main", message="Chốt kết luận từ research + validation: [paste]. Cần forecast + đề xuất")` |
+| Trả lại sửa | `sessions_send(sessionKey="agent:mr-insight:main", message="Thiếu 3 links nguồn, bổ sung ngay")` |
 
-### Quy trình review & trả lại sửa
+## Web Search (CHỈ dùng khi fallback)
 
-1. Nhận output từ team member
-2. Kiểm tra qua quality gate (checklist)
-3. Nếu **chưa đạt** → `sessions_send` trả lại với feedback cụ thể:
-   - Thiếu gì? (nguồn/link, signals, confidence, kết luận...)
-   - Tiêu chuẩn sửa: Must fix / Should improve / Nice to have
-   - Deadline sửa
-4. Nhận bản sửa → kiểm tra lại → đóng gói nếu đạt
+| Tool | Mục đích |
+|------|----------|
+| `web_search` | **CHỈ** dùng khi team member timeout > 4 phút |
+| `web_fetch` | **CHỈ** dùng khi cần fallback tự xử lý |
+
+- KHÔNG dùng để tự research trả lời sếp
+- KHÔNG dùng khi team đang hoạt động bình thường
