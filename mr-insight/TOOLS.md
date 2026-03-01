@@ -1,38 +1,41 @@
 # Tools — Mr. Insight
 
-## Mem0 Memory (Primary — Auto-recall + Auto-capture)
+## Web Research (Primary — cho research)
 
-Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
+### Quy trình research chuẩn
 
-> **Auto-recall** tự inject context trước khi respond. **Auto-capture** tự lưu sau mỗi exchange. Chỉ cần gọi tool thủ công khi muốn lưu/tìm cụ thể.
+```
+Bước 1: web_search("từ khóa") → lấy danh sách links + tóm tắt
+Bước 2: Chọn links quan trọng nhất
+Bước 3: web_fetch(url) → đọc chi tiết
+        ├── Thành công → lấy nội dung
+        └── Lỗi 403/Cloudflare → Fallback (xem bên dưới)
+```
 
-| Tool | Mục đích sử dụng |
-|------|-------------------|
-| `memory_store` | Lưu research findings, signals, nguồn tham chiếu, case studies |
-| `memory_search` | Nhớ lại research cũ, nguồn đã tìm, signals từ tuần trước |
-| `memory_list` | Liệt kê memories gần đây |
-| `memory_get` | Xem chi tiết 1 memory |
-| `memory_forget` | Xoá memory sai/cũ |
+### Tools
 
-### Cách sử dụng chính
+| Tool | Mục đích | Khi nào dùng |
+|------|----------|-------------|
+| `web_search` | Tìm nguồn, tin tức, báo cáo (Tavily API) | **LUÔN dùng đầu tiên** — không bị Cloudflare chặn |
+| `web_fetch` | Đọc full nội dung 1 trang web | Sau khi có link từ `web_search` |
+| `browser_navigate` | Mở trang web qua browser thật | **Fallback** khi `web_fetch` bị chặn (403/Cloudflare) |
 
-- **Lưu signal**: `memory_store("Signal: PBOC mở rộng pilot digital yuan sang 15 tỉnh — link: ...")`
-- **Lưu case study**: `memory_store("Case: Bank of Israel pilot digital shekel với 2 ngân hàng — link: ...")`
-- **Search**: `memory_search("CBDC pilots châu Á 2025-2026")` → nhớ lại research cũ
+### ⚠️ Xử lý khi web_fetch bị chặn
 
-## Web Search (Primary — cho research)
+Khi `web_fetch` trả lỗi 403, "Just a moment", hoặc nội dung trống:
 
-| Tool | Mục đích |
-|------|----------|
-| `web_search` | Tìm nguồn chính thống, tin tức ngành, báo cáo mới (dùng Tavily, fallback Gemini) |
-| `web_fetch` | Đọc nội dung trang web cụ thể (chuyển HTML → Markdown) |
+1. **Thử `browser_navigate`** 1 lần — nếu được thì lấy nội dung
+2. **Nếu cũng fail → bỏ qua link đó ngay**, dùng `web_search` tìm nguồn thay thế
+3. **Không retry quá 2 lần** trên cùng 1 link — tránh trễ pipeline
+4. Nội dung tóm tắt từ `web_search` nhiều khi đủ dùng mà không cần đọc full page
 
-### Lưu ý khi dùng web tools
+### Lưu ý quan trọng
 
-- `web_search` → tìm links + tóm tắt → chọn link tốt → `web_fetch` → đọc chi tiết
-- Ghi rõ **nguồn + ngày + tổ chức** cho mọi thông tin tìm được
-- `web_fetch` không chạy JavaScript — nếu trang JS-heavy, thử tìm nguồn khác
-- Luôn cross-check tối thiểu 2 nguồn cho claim quan trọng
+- **LUÔN** bắt đầu bằng `web_search` → lấy nhiều links → rồi mới `web_fetch` từng link
+- **web_search (Tavily)** trả nội dung tóm tắt sẵn → nhiều khi đủ dùng mà không cần `web_fetch`
+- Ghi rõ **nguồn + ngày + tổ chức** cho mọi thông tin
+- Cross-check tối thiểu **2 nguồn** cho claim quan trọng
+- Nếu 1 nguồn bị chặn → **bắt buộc tìm nguồn thay thế**, KHÔNG bỏ qua
 
 ## Inter-Agent Communication (sessions_send)
 
