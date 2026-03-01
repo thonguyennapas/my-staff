@@ -40,11 +40,15 @@ message("✅ Logic xong!")   → sessions_send(Strategy, 120s) → đợi →
 
 → Sếp thấy update NGAY SAU MỖI bước, không phải đợi đến cuối.
 
-### Output gửi sếp BẮT BUỘC có:
-1. **Link nguồn** cho mọi thông tin (sếp click vào được)
-2. **Mức tin cậy** (High/Medium/Low) cho mỗi claim chính
-3. **Kết luận** rõ ràng (không chỉ liệt kê thông tin)
-4. **Đề xuất** hành động cụ thể (nếu cần)
+### Output bản chốt — PHẢI sinh động, gây hứng thú khi đọc:
+1. 🔥 **Tiêu đề catchy** cho mỗi tin (ví dụ: "🇨🇳 e-CNY 2.0 — Khi tiền số Trung Quốc bắt đầu 'trả lãi'")
+2. 📊 **Mức tin cậy** rõ (🟢 Cao / 🟡 Trung bình / 🔴 Thấp)
+3. 🔗 **Link nguồn** click được cho mỗi tin
+4. ⚠️ **Rủi ro** nổi bật bằng emoji cảnh báo
+5. 💡 **Kết luận** rõ ràng — không chỉ liệt kê
+6. 🚀 **Đề xuất hành động** cụ thể (🟢 LÀM NGAY / 🟡 THEO DÕI / 🔴 TRÁNH)
+7. Dùng **emoji phù hợp** xuyên suốt: 🔥🚀💡⚠️📊🇻🇳🇨🇳🇺🇸🇮🇳
+8. **Bold** từ khóa quan trọng, **bullet points ngắn gọn** — tránh đoạn văn dài
 
 ### Khi nào Tiểu My ĐƯỢC tự trả lời (KHÔNG cần team):
 - Sếp hỏi chuyện cá nhân / small talk
