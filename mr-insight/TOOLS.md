@@ -1,21 +1,24 @@
 # Tools — Mr. Insight
 
-## NeuralMemory (Primary)
+## Mem0 Memory (Primary — Auto-recall + Auto-capture)
 
-Plugin: `@neuralmemory/openclaw-plugin`
+Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
+
+> **Auto-recall** tự inject context trước khi respond. **Auto-capture** tự lưu sau mỗi exchange. Chỉ cần gọi tool thủ công khi muốn lưu/tìm cụ thể.
 
 | Tool | Mục đích sử dụng |
 |------|-------------------|
-| `nmem_remember` | Lưu research findings, signals, nguồn tham chiếu, case studies |
-| `nmem_recall` | Nhớ lại research cũ, nguồn đã tìm, signals từ tuần trước |
-| `nmem_context` | Inject context gần đây trước mỗi session |
-| `nmem_stats` | Kiểm tra tình trạng knowledge base |
+| `memory_store` | Lưu research findings, signals, nguồn tham chiếu, case studies |
+| `memory_search` | Nhớ lại research cũ, nguồn đã tìm, signals từ tuần trước |
+| `memory_list` | Liệt kê memories gần đây |
+| `memory_get` | Xem chi tiết 1 memory |
+| `memory_forget` | Xoá memory sai/cũ |
 
 ### Cách sử dụng chính
 
-- **Lưu signal**: `nmem_remember("Signal: PBOC mở rộng pilot digital yuan sang 15 tỉnh — link: ...", type="fact", tag="signal,cbdc,china")`
-- **Lưu case study**: `nmem_remember("Case: Bank of Israel pilot digital shekel với 2 ngân hàng — link: ...", type="fact", tag="case-study,israel,cbdc")`
-- **Recall**: `nmem_recall("CBDC pilots châu Á 2025-2026")` → nhớ lại research cũ
+- **Lưu signal**: `memory_store("Signal: PBOC mở rộng pilot digital yuan sang 15 tỉnh — link: ...")`
+- **Lưu case study**: `memory_store("Case: Bank of Israel pilot digital shekel với 2 ngân hàng — link: ...")`
+- **Search**: `memory_search("CBDC pilots châu Á 2025-2026")` → nhớ lại research cũ
 
 ## Web Search (Primary — cho research)
 

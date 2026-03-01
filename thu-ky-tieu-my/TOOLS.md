@@ -1,23 +1,34 @@
 # Tools — Thư ký Tiểu My
 
-## NeuralMemory (Primary)
+## Mem0 Memory (Primary — Auto-recall + Auto-capture)
 
-Plugin đã cấu hình: `@neuralmemory/openclaw-plugin`
+Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
+
+> **Lưu ý quan trọng**: Mem0 có **Auto-recall** (tự nhớ lại context trước khi respond) và **Auto-capture** (tự lưu memories sau mỗi cuộc trò chuyện). Không cần gọi tool thủ công cho đa số trường hợp — hệ thống tự lo.
+
+### Tools khi cần thao tác thủ công
 
 | Tool | Mục đích sử dụng |
 |------|-------------------|
-| `nmem_remember` | Lưu decisions, briefs, quality standards, watchlist updates |
-| `nmem_recall` | Nhớ lại quyết định cũ, tiêu chuẩn, context team |
-| `nmem_context` | Inject context gần đây trước mỗi session |
-| `nmem_todo` | Quản lý deadline, theo dõi tasks team |
-| `nmem_stats` | Kiểm tra tình trạng brain/knowledge base |
+| `memory_store` | Lưu thủ công: decisions, briefs, quality standards, watchlist updates |
+| `memory_search` | Tìm kiếm memory cụ thể: quyết định cũ, tiêu chuẩn, context team |
+| `memory_list` | Liệt kê memories gần đây |
+| `memory_get` | Xem chi tiết 1 memory cụ thể |
+| `memory_forget` | Xoá memory không còn đúng/cần thiết |
 
 ### Cách sử dụng chính
 
-- **Decision log**: `nmem_remember("Sếp chốt: triển khai PoC CBDC Q2", type="decision")`
-- **Watchlist**: `nmem_remember("Theo dõi: PBOC digital yuan pilot mở rộng", type="fact", tag="watchlist")`
-- **Quality update**: `nmem_remember("Bổ sung checklist: yêu cầu confidence level cho mọi claim", type="instruction")`
-- **Recall**: `nmem_recall("quyết định về CBDC tuần trước")` → nhớ lại context
+- **Decision log**: `memory_store("Sếp chốt: triển khai PoC CBDC Q2")`
+- **Watchlist**: `memory_store("Theo dõi: PBOC digital yuan pilot mở rộng")`
+- **Quality update**: `memory_store("Bổ sung checklist: yêu cầu confidence level cho mọi claim")`
+- **Search**: `memory_search("quyết định về CBDC tuần trước")` → nhớ lại context
+- **Quên**: `memory_forget(id)` → xoá memory sai/cũ
+
+### Auto-recall & Auto-capture (tự động)
+
+- ✅ **Trước khi respond** → Mem0 tự tìm memories liên quan → inject vào context
+- ✅ **Sau khi respond** → Mem0 tự trích xuất facts, decisions, preferences → lưu lại
+- → Agent không cần gọi tool nhớ thủ công cho đa số trường hợp
 
 ## Web Search (Secondary)
 

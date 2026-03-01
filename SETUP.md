@@ -16,7 +16,7 @@ node --version
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Python 3.11+ (cho NeuralMemory)
+# Python 3.11+ (cho Mem0 OSS)
 python3 --version
 sudo apt-get install -y python3 python3-pip
 ```
@@ -27,20 +27,17 @@ sudo apt-get install -y python3 python3-pip
 npm install -g openclaw@latest
 ```
 
-### 1.3 Cài NeuralMemory plugin
+### 1.3 Cài Mem0 plugin
 
 ```bash
-# Python package
-pip install --break-system-packages --ignore-installed neural-memory
+# Python package (Mem0 open-source)
+pip install --break-system-packages mem0ai
 
-# OpenClaw plugin (phải cài bằng openclaw CLI)
-openclaw plugins install @neuralmemory/openclaw-plugin
-
-# Cài dependencies cho plugin
-cd ~/.openclaw/extensions/neuralmemory && npm install && cd -
+# OpenClaw plugin
+openclaw plugins install @mem0/openclaw-mem0
 ```
 
-> ⚠️ Nếu `openclaw plugins install` báo lỗi config → tạm bỏ `plugins` khỏi `~/.openclaw/openclaw.json`, cài xong rồi thêm lại.
+> Mem0 OSS dùng Google Gemini cho LLM + Embedder — đã config trong `openclaw.json`, không cần thêm bước nào.
 
 ### 1.4 Clone repo
 

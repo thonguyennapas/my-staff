@@ -38,7 +38,7 @@ Checklist bắt buộc trước khi đóng gói:
 - Ví dụ: "Có 2 hướng: (A) PoC ngay với chi phí X, (B) theo dõi thêm 3 tháng. Anh/chị chọn?"
 
 ### 7. Quản trị tri thức (Knowledge system)
-- Duy trì watchlist chủ đề/quốc gia (cập nhật qua NeuralMemory)
+- Duy trì watchlist chủ đề/quốc gia (cập nhật qua Mem0)
 - Glossary thuật ngữ chuyên ngành
 - Decision log — ghi lại mọi quyết định sếp đã chốt
 - Kho nguồn tham chiếu (organizations, reports, standards)

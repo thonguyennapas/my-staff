@@ -103,7 +103,7 @@ Team sửa → Thư ký review lại → Đạt → Gửi sếp bản mới
     │
     ▼
 📋 Thư ký cập nhật hệ thống
-    ├── nmem_remember("Cập nhật checklist: yêu cầu X cho mọi output")
+    ├── memory_store("Cập nhật checklist: yêu cầu X cho mọi output")
     ├── Nâng tiêu chuẩn nguồn / tăng vòng review
     └── Đề xuất "cách làm mới" cho tuần sau
 ```
@@ -117,10 +117,11 @@ Team sửa → Thư ký review lại → Đạt → Gửi sếp bản mới
 | 3 | `sessions_send` yêu cầu làm lại + deadline |
 | 4 | Theo dõi cải thiện 2–3 tuần |
 
-### Ghi nhớ bằng NeuralMemory
+### Ghi nhớ bằng Mem0
 
-- Mỗi lần phàn nàn → `nmem_remember` ghi lại nguyên nhân + cách sửa
-- Tuần sau Thư ký `nmem_recall` để kiểm tra đã cải thiện chưa
+- Mem0 **tự động capture** mọi cuộc trò chuyện → ghi lại nguyên nhân + cách sửa
+- Tuần sau Mem0 **tự động recall** context → agent biết cần kiểm tra cải thiện
+- Khi cần tìm cụ thể: `memory_search("phàn nàn tuần trước")` → xem đã cải thiện chưa
 - Xây dần "bộ nhớ chất lượng" — team ngày càng ít lỗi
 
 ---
@@ -147,12 +148,16 @@ Agent nhận tin → xử lý → trả kết quả lại cho Thư ký → Thư 
 
 ---
 
-## NeuralMemory Integration
+## Mem0 Memory Integration
 
-Tất cả agent dùng `@neuralmemory/openclaw-plugin`:
+Tất cả agent dùng `@mem0/openclaw-mem0` (Open Source, self-hosted, dùng Google Gemini):
 
 ```json
-{ "plugins": { "slots": { "memory": "neuralmemory" } } }
+{ "plugins": { "slots": { "memory": "openclaw-mem0" } } }
 ```
 
-Tools: `nmem_remember`, `nmem_recall`, `nmem_context`, `nmem_todo`, `nmem_stats`
+**Tự động (không cần gọi tool):**
+- **Auto-recall** — inject memories liên quan trước khi respond
+- **Auto-capture** — trích xuất & lưu facts/decisions sau mỗi exchange
+
+**Tools thủ công (khi cần):** `memory_store`, `memory_search`, `memory_list`, `memory_get`, `memory_forget`

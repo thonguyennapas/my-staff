@@ -1,22 +1,25 @@
 # Tools — Mr. Logic
 
-## NeuralMemory (Primary)
+## Mem0 Memory (Primary — Auto-recall + Auto-capture)
 
-Plugin: `@neuralmemory/openclaw-plugin`
+Plugin: `@mem0/openclaw-mem0` (Open Source, self-hosted)
+
+> **Auto-recall** tự inject context trước khi respond. **Auto-capture** tự lưu sau mỗi exchange. Chỉ cần gọi tool thủ công khi muốn lưu/tìm cụ thể.
 
 | Tool | Mục đích sử dụng |
 |------|-------------------|
-| `nmem_remember` | Lưu confidence assessments, risk findings, falsifiers, assumption banks |
-| `nmem_recall` | Nhớ lại dữ kiện cũ, risk assessment trước đó, confidence history |
-| `nmem_context` | Inject context gần đây trước mỗi session |
-| `nmem_stats` | Kiểm tra tình trạng knowledge base |
+| `memory_store` | Lưu confidence assessments, risk findings, falsifiers, assumption banks |
+| `memory_search` | Nhớ lại dữ kiện cũ, risk assessment trước đó, confidence history |
+| `memory_list` | Liệt kê memories gần đây |
+| `memory_get` | Xem chi tiết 1 memory |
+| `memory_forget` | Xoá memory sai/cũ |
 
 ### Cách sử dụng chính
 
-- **Lưu confidence**: `nmem_remember("Confidence: CBDC China rollout 2026 = HIGH — 3 nguồn confirm, pilot 15 tỉnh", type="fact", tag="confidence,cbdc")`
-- **Lưu risk**: `nmem_remember("Risk: Digital yuan privacy concern — MEDIUM — chưa có independent audit", type="insight", tag="risk,cbdc,china")`
-- **Lưu falsifier**: `nmem_remember("Falsifier: CBDC adoption sẽ chậm NẾU Alipay/WeChat không integrate", type="insight", tag="falsifier,cbdc")`
-- **Recall**: `nmem_recall("risk assessment CBDC tuần trước")` → so sánh với tuần này
+- **Lưu confidence**: `memory_store("Confidence: CBDC China rollout 2026 = HIGH — 3 nguồn confirm, pilot 15 tỉnh")`
+- **Lưu risk**: `memory_store("Risk: Digital yuan privacy concern — MEDIUM — chưa có independent audit")`
+- **Lưu falsifier**: `memory_store("Falsifier: CBDC adoption sẽ chậm NẾU Alipay/WeChat không integrate")`
+- **Search**: `memory_search("risk assessment CBDC tuần trước")` → so sánh với tuần này
 
 ## Web Search (Secondary — cho verify)
 
