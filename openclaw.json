@@ -100,7 +100,7 @@
         },
         "entries": {
             "openclaw-mem0": {
-                "enabled": true,
+                "enabled": false,
                 "config": {
                     "mode": "open-source",
                     "userId": "anh-tho",
