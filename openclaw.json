@@ -106,7 +106,10 @@
         "enabled": true
     },
     "session": {
-        "dmScope": "per-account-channel-peer"
+        "dmScope": "per-account-channel-peer",
+        "agentToAgent": {
+            "maxPingPongTurns": 1
+        }
     },
     "gateway": {
         "mode": "local"
