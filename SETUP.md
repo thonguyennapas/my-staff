@@ -30,14 +30,29 @@ npm install -g openclaw@latest
 ### 1.3 Cài Mem0 plugin
 
 ```bash
-# Python package (Mem0 open-source)
-pip install --break-system-packages mem0ai
+# Python package (Mem0 open-source + Gemini support)
+pip install --break-system-packages mem0ai google-generativeai
 
 # OpenClaw plugin
 openclaw plugins install @mem0/openclaw-mem0
 ```
 
-> Mem0 OSS dùng Google Gemini cho LLM + Embedder — đã config trong `openclaw.json`, không cần thêm bước nào.
+> ⚠️ **Lưu ý Gemini provider**: Config hiện tại dùng Gemini cho LLM + Embedder.
+> Nếu sau khi khởi động gateway mà Mem0 báo lỗi provider, chuyển sang dùng OpenAI hoặc Ollama:
+>
+> **Fallback OpenAI** (cần OPENAI_API_KEY):
+> ```json
+> "oss": { "llm": { "provider": "openai" }, "embedder": { "provider": "openai" } }
+> ```
+>
+> **Fallback Ollama** (100% local, $0):
+> ```bash
+> curl -fsSL https://ollama.com/install.sh | sh
+> ollama pull nomic-embed-text && ollama pull llama3.2
+> ```
+> ```json
+> "oss": { "llm": { "provider": "ollama", "config": { "model": "llama3.2" } }, "embedder": { "provider": "ollama", "config": { "model": "nomic-embed-text" } } }
+> ```
 
 ### 1.4 Clone repo
 
