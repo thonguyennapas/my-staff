@@ -1,24 +1,30 @@
 # Tools — Thư ký Tiểu My
 
-## 1. Message Tool (GỬI UPDATE TRỰC TIẾP VỀ TELEGRAM)
+## 1. Message Tool — GỬI UPDATE VỀ TELEGRAM (BẮT BUỘC)
 
-Dùng tool `message` để push update trung gian cho sếp **ngay lập tức**, ngay cả khi đang chờ kết quả từ team.
+Dùng tool `message` để push update cho sếp **ngay lập tức** giữa mỗi bước pipeline.
 
-### Cú pháp
+### Cú pháp chính xác
 
 ```
-message(channel="telegram", chatId="1249671117", text="📋 Update nội dung...")
+message(action="send", target="telegram:1249671117", message="📋 Nội dung update...")
 ```
 
-### Khi nào dùng
+### Parameters
+
+| Param | Giá trị |
+|-------|---------|
+| `action` | `"send"` (bắt buộc) |
+| `target` | `"telegram:1249671117"` (ID Telegram sếp) |
+| `message` | Nội dung tin nhắn |
+
+### Khi nào BẮT BUỘC dùng
 
 | Thời điểm | Message |
 |-----------|---------|
 | Ngay khi nhận yêu cầu | `"📋 Em nhận rồi! Đang phân công Mr. Insight research..."` |
-| Sau khi Insight trả kết quả | `"✅ Mr. Insight research xong! Đang chuyển Mr. Logic validate..."` |
-| Sau khi Logic trả kết quả | `"✅ Mr. Logic validate xong! Đang chuyển Mr. Strategy chốt..."` |
-
-⚠️ **BẮT BUỘC** gửi message update trước MỖI bước pipeline — sếp phải thấy tiến độ real-time.
+| Insight trả kết quả | `"✅ Insight research xong! Đang chuyển Logic validate..."` |
+| Logic trả kết quả | `"✅ Logic validate xong! Đang chuyển Strategy chốt..."` |
 
 ## 2. Inter-Agent Communication (sessions_send)
 
@@ -30,12 +36,12 @@ message(channel="telegram", chatId="1249671117", text="📋 Update nội dung...
 | Mr. Logic | `agent:mr-logic:main` |
 | Mr. Strategy | `agent:mr-strategy:main` |
 
-### Pipeline chuẩn (đồng bộ + update real-time)
+### Pipeline chuẩn
 
 ```
-message("📋 Em nhận rồi!") → sessions_send(Insight, timeout=120) →
-message("✅ Insight xong!") → sessions_send(Logic, timeout=120) →
-message("✅ Logic xong!") → sessions_send(Strategy, timeout=120) →
+message("📋 Em nhận rồi!") → sessions_send(Insight, 120s) → đợi →
+message("✅ Insight xong!") → sessions_send(Logic, 120s) → đợi →
+message("✅ Logic xong!")   → sessions_send(Strategy, 120s) → đợi →
 Đóng gói bản chốt → Reply sếp
 ```
 
@@ -43,5 +49,5 @@ message("✅ Logic xong!") → sessions_send(Strategy, timeout=120) →
 
 | Tool | Mục đích |
 |------|----------|
-| `web_search` | **CHỈ** dùng khi team member timeout > 4 phút |
-| `web_fetch` | **CHỈ** dùng khi cần fallback tự xử lý |
+| `web_search` | CHỈ khi team timeout > 4 phút |
+| `web_fetch` | CHỈ khi cần fallback |

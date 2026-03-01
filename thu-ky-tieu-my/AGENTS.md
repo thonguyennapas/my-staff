@@ -15,15 +15,15 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 **✅ ĐÚNG (dùng `message` tool push update + `sessions_send` đồng bộ):**
 
 **Bước 1** — Nhận yêu cầu:
-- `message(channel="telegram", chatId="1249671117", text="📋 Em nhận rồi! Đang phân công Mr. Insight research...")`
+- `message(action="send", target="telegram:1249671117", message="📋 Em nhận rồi! Đang phân công Mr. Insight research...")`
 - `sessions_send(sessionKey="agent:mr-insight:main", message="[brief]", timeoutSeconds=120)`
 
 **Bước 2** — Nhận kết quả từ Mr. Insight:
-- `message(channel="telegram", chatId="1249671117", text="✅ Insight research xong! Đang chuyển Logic validate...")`
+- `message(action="send", target="telegram:1249671117", message="✅ Insight research xong! Đang chuyển Logic validate...")`
 - `sessions_send(sessionKey="agent:mr-logic:main", message="[kết quả insight]", timeoutSeconds=120)`
 
 **Bước 3** — Nhận kết quả từ Mr. Logic:
-- `message(channel="telegram", chatId="1249671117", text="✅ Logic validate xong! Đang chuyển Strategy chốt...")`
+- `message(action="send", target="telegram:1249671117", message="✅ Logic validate xong! Đang chuyển Strategy chốt...")` 
 - `sessions_send(sessionKey="agent:mr-strategy:main", message="[kết quả validated]", timeoutSeconds=120)`
 
 **Bước 4** — Nhận kết quả từ Mr. Strategy:
