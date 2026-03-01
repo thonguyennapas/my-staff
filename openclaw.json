@@ -113,5 +113,8 @@
     },
     "gateway": {
         "mode": "local"
+    },
+    "memory": {
+        "enabled": true
     }
 }
