@@ -66,7 +66,12 @@ nano .env
 | `TELEGRAM_LOGIC_TOKEN` | BotFather → `@Tho_MrLogicBot` |
 | `TELEGRAM_STRATEGY_TOKEN` | BotFather → `@Tho_MrStrategyBot` |
 | `TELEGRAM_OWNER_ID` | Gửi `/start` cho `@userinfobot` |
-| `GOOGLE_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) |
+| `GOOGLE_API_KEY_TIEU_MY` | [Google AI Studio](https://aistudio.google.com/apikey) — key riêng cho Tiểu My |
+| `GOOGLE_API_KEY_INSIGHT` | Google AI Studio — key riêng cho Mr. Insight |
+| `GOOGLE_API_KEY_LOGIC` | Google AI Studio — key riêng cho Mr. Logic |
+| `GOOGLE_API_KEY_STRATEGY` | Google AI Studio — key riêng cho Mr. Strategy |
+
+> ⚠️ **Quan trọng**: Tạo **4 API key riêng biệt** (không dùng chung 1 key) để tránh rate limit khi nhiều agent hoạt động cùng lúc.
 
 ### 1.6 Setup auth (API key) — bắt buộc
 
@@ -74,21 +79,22 @@ nano .env
 # Chạy configure wizard — chọn:
 # 1. Local (this machine)
 # 2. Google/Gemini
-# 3. Dán GOOGLE_API_KEY
+# 3. Dán API key của Tiểu My (GOOGLE_API_KEY_TIEU_MY)
 openclaw configure
 ```
 
-> ⚠️ **Bước này bắt buộc** — wizard tạo `auth-profiles.json` đúng format cho main agent.
+> ⚠️ **Bước này bắt buộc** — wizard tạo `auth-profiles.json` template. Sau đó script sync sẽ gán key riêng cho từng agent.
 
-### 1.7 Sync auth cho tất cả agents
+### 1.7 Sync auth cho tất cả agents (mỗi agent 1 key riêng)
 
 ```bash
-# Copy auth từ main agent → 4 agents custom
+# Gán API key riêng cho từng agent (đọc từ .env)
 chmod +x scripts/sync-auth.sh
 bash scripts/sync-auth.sh
 ```
 
-> Sau này đổi API key: chạy `openclaw configure` lại → rồi `bash scripts/sync-auth.sh`
+> Script sẽ đọc 4 biến `GOOGLE_API_KEY_*` từ `.env` và tạo `auth-profiles.json` riêng cho từng agent.
+> Sau này đổi API key: sửa `.env` → chạy lại `bash scripts/sync-auth.sh` → restart gateway.
 
 ### 1.8 Copy config vào OpenClaw
 
@@ -231,13 +237,16 @@ cp openclaw.json ~/.openclaw/openclaw.json
 ### 2.3 Đổi API key
 
 ```bash
-# 1. Chạy configure lại
-openclaw configure
+# 1. Sửa .env — cập nhật key mới cho agent cần đổi
+nano ~/my-staff/.env
 
-# 2. Sync auth cho tất cả agents
+# 2. Copy .env mới lên OpenClaw
+cp ~/my-staff/.env ~/.openclaw/.env
+
+# 3. Sync auth (gán key riêng cho từng agent)
 bash ~/my-staff/scripts/sync-auth.sh
 
-# 3. Restart gateway
+# 4. Restart gateway
 pkill -f openclaw-gateway
 screen -S openclaw
 openclaw gateway
