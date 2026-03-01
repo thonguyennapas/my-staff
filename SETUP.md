@@ -27,41 +27,14 @@ sudo apt-get install -y python3 python3-pip
 npm install -g openclaw@latest
 ```
 
-### 1.3 Cài Mem0 plugin
-
-```bash
-# Python package (Mem0 open-source + Gemini support)
-pip install --break-system-packages mem0ai google-generativeai
-
-# OpenClaw plugin
-openclaw plugins install @mem0/openclaw-mem0
-```
-
-> ⚠️ **Lưu ý Gemini provider**: Config hiện tại dùng Gemini cho LLM + Embedder.
-> Nếu sau khi khởi động gateway mà Mem0 báo lỗi provider, chuyển sang dùng OpenAI hoặc Ollama:
->
-> **Fallback OpenAI** (cần OPENAI_API_KEY):
-> ```json
-> "oss": { "llm": { "provider": "openai" }, "embedder": { "provider": "openai" } }
-> ```
->
-> **Fallback Ollama** (100% local, $0):
-> ```bash
-> curl -fsSL https://ollama.com/install.sh | sh
-> ollama pull nomic-embed-text && ollama pull llama3.2
-> ```
-> ```json
-> "oss": { "llm": { "provider": "ollama", "config": { "model": "llama3.2" } }, "embedder": { "provider": "ollama", "config": { "model": "nomic-embed-text" } } }
-> ```
-
-### 1.4 Clone repo
+### 1.3 Clone repo
 
 ```bash
 git clone https://github.com/thonguyennapas/my-staff.git
 cd my-staff
 ```
 
-### 1.5 Tạo file .env
+### 1.4 Tạo file .env
 
 ```bash
 cp .env.example .env
@@ -83,9 +56,9 @@ nano .env
 | `GOOGLE_API_KEY_LOGIC` | Google AI Studio — key riêng cho Mr. Logic |
 | `GOOGLE_API_KEY_STRATEGY` | Google AI Studio — key riêng cho Mr. Strategy |
 
-> ⚠️ **Quan trọng**: Tạo **4 API key riêng biệt** (không dùng chung 1 key) để tránh rate limit khi nhiều agent hoạt động cùng lúc.
+> ⚠️ **Quan trọng**: Tạo **4 API key từ 4 Google Cloud projects riêng biệt** — rate limit tính theo project, không theo key. Dùng chung 1 project = chia sẻ quota.
 
-### 1.6 Setup auth (API key) — bắt buộc
+### 1.5 Setup auth (API key) — bắt buộc
 
 ```bash
 # Chạy configure wizard — chọn:
@@ -97,7 +70,7 @@ openclaw configure
 
 > ⚠️ **Bước này bắt buộc** — wizard tạo `auth-profiles.json` template. Sau đó script sync sẽ gán key riêng cho từng agent.
 
-### 1.7 Sync auth cho tất cả agents (mỗi agent 1 key riêng)
+### 1.6 Sync auth cho tất cả agents (mỗi agent 1 key riêng)
 
 ```bash
 # Gán API key riêng cho từng agent (đọc từ .env)
@@ -108,7 +81,7 @@ bash scripts/sync-auth.sh
 > Script sẽ đọc 4 biến `GOOGLE_API_KEY_*` từ `.env` và tạo `auth-profiles.json` riêng cho từng agent.
 > Sau này đổi API key: sửa `.env` → chạy lại `bash scripts/sync-auth.sh` → restart gateway.
 
-### 1.8 Copy config vào OpenClaw
+### 1.7 Copy config vào OpenClaw
 
 ```bash
 mkdir -p ~/.openclaw
@@ -118,23 +91,26 @@ cp openclaw.json ~/.openclaw/openclaw.json
 
 > **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — sửa `~/.openclaw/openclaw.json` thì Gateway tự reload.
 
-### 1.9 Khởi động Gateway
+### 1.8 Khởi động Gateway
 
 ```bash
+# QUAN TRỌNG: source .env trước khi chạy gateway để load model variables
+source ~/my-staff/.env
+
 # Cách 1: screen (đơn giản, chạy nền)
 screen -S openclaw
-openclaw gateway
+source ~/my-staff/.env && openclaw gateway
 # Nhấn Ctrl+A rồi D để thoát screen (gateway vẫn chạy)
 # Quay lại xem logs: screen -r openclaw
 
 # Cách 2: pm2 (tự restart khi VPS reboot)
 npm install -g pm2
-pm2 start "openclaw gateway" --name openclaw
+pm2 start "source ~/my-staff/.env && openclaw gateway" --name openclaw
 pm2 save
 pm2 startup  # tạo script tự chạy khi VPS reboot
 ```
 
-### 1.10 Pairing Telegram (4 bots)
+### 1.9 Pairing Telegram (4 bots)
 
 ```bash
 # Mở Telegram → gửi /start cho từng bot:
@@ -148,68 +124,39 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-### 1.11 Tạo Cron Job
+### 1.10 Tạo Cron Job
 
-**Bước 1: Test daily trước (8AM mỗi ngày)**
+**Cron 1: Điểm tin hàng ngày (8AM mỗi ngày)**
 
 ```bash
-openclaw cron add \
-  --name "Test điểm tin hàng ngày" \
+source ~/my-staff/.env && openclaw cron add \
+  --name "Điểm tin thanh toán hàng ngày" \
   --cron "0 8 * * *" \
   --tz "Asia/Ho_Chi_Minh" \
   --session isolated \
   --agent thu-ky-tieu-my \
-  --message "Bắt đầu quy trình 'Điểm tin thị trường hàng ngày' (chế độ test):
-
-1. Chốt scope hôm nay (ưu tiên: công nghệ thanh toán, Visa/Mastercard, CBDC, blockchain, agentic commerce, VN fintech)
-2. Phân công Mr. Insight gom tin + signals + link
-3. Phân công Mr. Logic validate + confidence + risks
-4. Phân công Mr. Strategy kết luận + forecast + đề xuất
-5. Đóng gói thành 01 bản gửi sếp với đủ 4 phần:
-   - (1) Điểm tin có link (5-10 tin)
-   - (2) Kết luận ngày (2-3 kết luận chính)
-   - (3) Xu hướng (nếu có)
-   - (4) Đề xuất (nếu cần)
-
-Lưu ý: đây là bản test daily, ngắn gọn hơn bản weekly." \
+  --message "Nghiên cứu và gửi anh bản tin thanh toán thế giới hôm nay nhé. Ưu tiên: công nghệ thanh toán, CBDC, blockchain, Visa/Mastercard, agentic commerce, VN fintech." \
   --announce \
   --channel telegram \
   --to "${TELEGRAM_OWNER_ID}"
 ```
 
-**Bước 2: Khi ổn định → chuyển sang weekly thứ 5**
+**Cron 2: Tổng hợp hàng tuần (thứ 5, 8AM)**
 
 ```bash
-# Xóa cron test daily
-openclaw cron list
-openclaw cron remove <daily-job-id>
-
-# Tạo cron weekly chính thức (thứ 5, 8AM)
-openclaw cron add \
-  --name "Điểm tin thị trường hàng tuần" \
+source ~/my-staff/.env && openclaw cron add \
+  --name "Tổng hợp bản tin thanh toán tuần" \
   --cron "0 8 * * 4" \
   --tz "Asia/Ho_Chi_Minh" \
   --session isolated \
   --agent thu-ky-tieu-my \
-  --message "Bắt đầu quy trình 'Điểm tin thị trường hàng tuần':
-
-1. Chốt scope tuần này (ưu tiên: công nghệ thanh toán, Visa/Mastercard, CBDC, blockchain, agentic commerce, VN fintech)
-2. Phân công Mr. Insight gom tin + signals + link
-3. Phân công Mr. Logic validate + confidence + risks + falsifiers
-4. Phân công Mr. Strategy kết luận + forecast + đề xuất
-5. Đóng gói thành 01 bản gửi sếp với đủ 4 phần:
-   - (1) Điểm tin có link (10-20 tin)
-   - (2) Kết luận tuần (3 kết luận chính)
-   - (3) Dự đoán/xu hướng (nếu có)
-   - (4) Đề xuất (nếu cần)
-
-Nếu chưa đủ bằng chứng để dự đoán, ghi rõ: chưa đủ bằng chứng, tuần sau cần theo dõi gì." \
+  --message "Tổng hợp bản tin thanh toán thế giới tuần qua. So sánh với tuần trước, nêu xu hướng nổi bật và đề xuất hành động cho anh nhé." \
   --announce \
   --channel telegram \
   --to "${TELEGRAM_OWNER_ID}"
 ```
 
-### 1.12 Verify
+### 1.11 Verify
 
 ```bash
 openclaw doctor           # kiểm tra config
@@ -282,7 +229,7 @@ openclaw cron runs --id <job-id>      # Xem lịch sử chạy
 | `@Tho_MrInsightBot` | Hỏi trực tiếp Mr. Insight về research/signals |
 | `@Tho_MrLogicBot` | Hỏi trực tiếp Mr. Logic về validation/risk |
 | `@Tho_MrStrategyBot` | Hỏi trực tiếp Mr. Strategy về kết luận/forecast |
-| Cron (tự động) | Mỗi thứ 5, 8AM (giờ VN) → Thư ký tự chạy |
+| Cron (tự động) | Hàng ngày 8AM + Hàng tuần thứ 5, 8AM (giờ VN) |
 
 ### Chat commands (trong Telegram)
 
