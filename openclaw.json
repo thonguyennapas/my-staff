@@ -27,7 +27,7 @@
     "channels": {
         "telegram": {
             "enabled": true,
-            "streaming": "partial",
+            "streaming": "block",
             "accounts": {
                 "default": {
                     "name": "Thư ký Tiểu My",

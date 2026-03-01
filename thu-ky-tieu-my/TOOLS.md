@@ -1,8 +1,26 @@
 # Tools — Thư ký Tiểu My
 
-## Inter-Agent Communication (sessions_send) — QUAN TRỌNG
+## 1. Message Tool (GỬI UPDATE TRỰC TIẾP VỀ TELEGRAM)
 
-Thư ký PHẢI dùng `sessions_send` để giao việc cho team. **KHÔNG tự làm chuyên môn.**
+Dùng tool `message` để push update trung gian cho sếp **ngay lập tức**, ngay cả khi đang chờ kết quả từ team.
+
+### Cú pháp
+
+```
+message(channel="telegram", chatId="1249671117", text="📋 Update nội dung...")
+```
+
+### Khi nào dùng
+
+| Thời điểm | Message |
+|-----------|---------|
+| Ngay khi nhận yêu cầu | `"📋 Em nhận rồi! Đang phân công Mr. Insight research..."` |
+| Sau khi Insight trả kết quả | `"✅ Mr. Insight research xong! Đang chuyển Mr. Logic validate..."` |
+| Sau khi Logic trả kết quả | `"✅ Mr. Logic validate xong! Đang chuyển Mr. Strategy chốt..."` |
+
+⚠️ **BẮT BUỘC** gửi message update trước MỖI bước pipeline — sếp phải thấy tiến độ real-time.
+
+## 2. Inter-Agent Communication (sessions_send)
 
 ### Session Keys
 
@@ -12,26 +30,16 @@ Thư ký PHẢI dùng `sessions_send` để giao việc cho team. **KHÔNG tự 
 | Mr. Logic | `agent:mr-logic:main` |
 | Mr. Strategy | `agent:mr-strategy:main` |
 
-### Cú pháp — LUÔN dùng timeoutSeconds=0
+### Pipeline chuẩn (đồng bộ + update real-time)
 
 ```
-sessions_send(sessionKey="agent:mr-insight:main", message="...", timeoutSeconds=0)
+message("📋 Em nhận rồi!") → sessions_send(Insight, timeout=120) →
+message("✅ Insight xong!") → sessions_send(Logic, timeout=120) →
+message("✅ Logic xong!") → sessions_send(Strategy, timeout=120) →
+Đóng gói bản chốt → Reply sếp
 ```
 
-⚡ `timeoutSeconds=0` = gửi xong, KHÔNG chờ → reply cho sếp ngay → kết quả từ agent sẽ quay lại sau như tin nhắn mới.
-
-❌ **KHÔNG dùng** `timeoutSeconds=120` — sẽ khiến tất cả tin nhắn dồn lại gửi 1 lần.
-
-### Ví dụ giao việc
-
-| Turn | Hành động |
-|------|-----------|
-| Turn 1 | Reply sếp "Em nhận rồi!" + `sessions_send(sessionKey="agent:mr-insight:main", message="...", timeoutSeconds=0)` |
-| Turn 2 | Nhận kết quả Insight → Reply sếp "✅ Insight xong!" + `sessions_send(sessionKey="agent:mr-logic:main", message="...", timeoutSeconds=0)` |
-| Turn 3 | Nhận kết quả Logic → Reply sếp "✅ Logic xong!" + `sessions_send(sessionKey="agent:mr-strategy:main", message="...", timeoutSeconds=0)` |
-| Turn 4 | Nhận kết quả Strategy → Đóng gói bản chốt → Gửi sếp |
-
-## Web Search (CHỈ dùng khi fallback)
+## 3. Web Search (CHỈ fallback)
 
 | Tool | Mục đích |
 |------|----------|

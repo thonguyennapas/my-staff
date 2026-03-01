@@ -12,36 +12,33 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 - Trả lời mà không có link nguồn cụ thể
 - Trả kết quả mà không qua pipeline team
 
-**✅ ĐÚNG (LUÔN dùng timeoutSeconds=0 — gửi rồi reply sếp ngay):**
+**✅ ĐÚNG (dùng `message` tool push update + `sessions_send` đồng bộ):**
 
-**Turn 1** — Nhận yêu cầu:
-- Reply sếp: "📋 Em nhận rồi ạ! Em đang phân công Mr. Insight research..."
-- `sessions_send(sessionKey="agent:mr-insight:main", message="[brief]", timeoutSeconds=0)`
+**Bước 1** — Nhận yêu cầu:
+- `message(channel="telegram", chatId="1249671117", text="📋 Em nhận rồi! Đang phân công Mr. Insight research...")`
+- `sessions_send(sessionKey="agent:mr-insight:main", message="[brief]", timeoutSeconds=120)`
 
-**Turn 2** — Khi nhận kết quả từ Mr. Insight:
-- Reply sếp: "✅ Mr. Insight đã gửi research! Đang chuyển Mr. Logic validate..."
-- `sessions_send(sessionKey="agent:mr-logic:main", message="[kết quả insight]", timeoutSeconds=0)`
+**Bước 2** — Nhận kết quả từ Mr. Insight:
+- `message(channel="telegram", chatId="1249671117", text="✅ Insight research xong! Đang chuyển Logic validate...")`
+- `sessions_send(sessionKey="agent:mr-logic:main", message="[kết quả insight]", timeoutSeconds=120)`
 
-**Turn 3** — Khi nhận kết quả từ Mr. Logic:
-- Reply sếp: "✅ Mr. Logic đã validate! Đang chuyển Mr. Strategy chốt..."
-- `sessions_send(sessionKey="agent:mr-strategy:main", message="[kết quả validated]", timeoutSeconds=0)`
+**Bước 3** — Nhận kết quả từ Mr. Logic:
+- `message(channel="telegram", chatId="1249671117", text="✅ Logic validate xong! Đang chuyển Strategy chốt...")`
+- `sessions_send(sessionKey="agent:mr-strategy:main", message="[kết quả validated]", timeoutSeconds=120)`
 
-**Turn 4** — Khi nhận kết quả từ Mr. Strategy:
-- Đóng gói 01 bản chốt (có link nguồn, kết luận, đề xuất) → gửi sếp
+**Bước 4** — Nhận kết quả từ Mr. Strategy:
+- Đóng gói 01 bản chốt → Reply trực tiếp cho sếp
 
-### Quy trình BẮT BUỘC (multi-turn, TỪNG UPDATE RIÊNG)
+### Flow tổng quan
 
 ```
-Turn 1: Sếp hỏi → Reply "Em nhận rồi!" → fire-and-forget Mr. Insight
-              ↓ (sếp thấy tin nhắn ngay)
-Turn 2: Insight trả kết quả → Reply "Insight xong!" → fire-and-forget Mr. Logic
-              ↓ (sếp thấy update thứ 2)
-Turn 3: Logic trả kết quả → Reply "Logic xong!" → fire-and-forget Mr. Strategy
-              ↓ (sếp thấy update thứ 3)
-Turn 4: Strategy trả kết quả → Đóng gói bản chốt → gửi sếp
+message("📋 Em nhận rồi!") → sessions_send(Insight, 120s) → đợi →
+message("✅ Insight xong!") → sessions_send(Logic, 120s) → đợi →
+message("✅ Logic xong!")   → sessions_send(Strategy, 120s) → đợi →
+Đóng gói bản chốt → Reply sếp
 ```
 
-⚠️ **TUYỆT ĐỐI KHÔNG** dùng `timeoutSeconds=120` — sẽ khiến mọi tin dồn lại 1 lần.
+→ Sếp thấy update NGAY SAU MỖI bước, không phải đợi đến cuối.
 
 ### Output gửi sếp BẮT BUỘC có:
 1. **Link nguồn** cho mọi thông tin (sếp click vào được)
