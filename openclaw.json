@@ -22,12 +22,20 @@
                 "workspace": "${STAFF_HOME}/mr-strategy",
                 "model": "${STRATEGY_MODEL}"
             }
-        ]
+        ],
+        "defaults": {
+            "blockStreamingDefault": "on",
+            "blockStreamingBreak": "text_end",
+            "blockStreamingCoalesce": {
+                "minChars": 80,
+                "idleMs": 500
+            }
+        }
     },
     "channels": {
         "telegram": {
             "enabled": true,
-            "streaming": "block",
+            "streaming": "partial",
             "accounts": {
                 "default": {
                     "name": "Thư ký Tiểu My",
@@ -108,7 +116,7 @@
     "session": {
         "dmScope": "per-account-channel-peer",
         "agentToAgent": {
-            "maxPingPongTurns": 3
+            "maxPingPongTurns": 1
         }
     },
     "gateway": {

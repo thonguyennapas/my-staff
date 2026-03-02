@@ -2,40 +2,43 @@
 
 ## Web Research (Primary — cho research)
 
+### ⚡ QUY TẮC TỐC ĐỘ — ĐỌC TRƯỚC KHI LÀM
+
+> **Pipeline có giới hạn thời gian. Mỗi giây đều quan trọng.**
+> Ưu tiên TỐC ĐỘ — dùng `web_search` summaries làm nguồn chính.
+> `web_fetch` chỉ dùng khi THẬT SỰ cần chi tiết mà summary không đủ.
+
 ### Quy trình research chuẩn
 
 ```
-Bước 1: web_search("từ khóa") → lấy danh sách links + tóm tắt
-Bước 2: Chọn links quan trọng nhất
-Bước 3: web_fetch(url) → đọc chi tiết
-        ├── Thành công → lấy nội dung
-        └── Lỗi 403/Cloudflare → Fallback (xem bên dưới)
+Bước 1: web_search("từ khóa") → lấy danh sách links + TÓM TẮT SẴN
+Bước 2: Dùng tóm tắt từ web_search làm NỘI DUNG CHÍNH (đủ 80% trường hợp)
+Bước 3: CHỈ web_fetch tối đa 2 URL quan trọng nhất (nếu cần thêm chi tiết)
+        ├── Thành công → bổ sung nội dung
+        └── Lỗi 404/403 → BỎ QUA NGAY, dùng tóm tắt từ Bước 1
 ```
 
 ### Tools
 
 | Tool | Mục đích | Khi nào dùng |
 |------|----------|-------------|
-| `web_search` | Tìm nguồn, tin tức, báo cáo (Tavily API) | **LUÔN dùng đầu tiên** — không bị Cloudflare chặn |
-| `web_fetch` | Đọc full nội dung 1 trang web | Sau khi có link từ `web_search` |
-| `browser_navigate` | Mở trang web qua browser thật | **Fallback** khi `web_fetch` bị chặn (403/Cloudflare) |
+| `web_search` | Tìm nguồn + lấy tóm tắt sẵn (Tavily API) | **LUÔN dùng — đây là nguồn chính** |
+| `web_fetch` | Đọc full nội dung 1 trang web | **CHỈ khi tóm tắt chưa đủ** — tối đa 2 URL |
+| `browser_navigate` | Mở trang qua browser thật | **KHÔNG dùng** trừ khi Thư ký yêu cầu cụ thể |
 
-### ⚠️ Xử lý khi web_fetch bị chặn
+### ⚠️ Quy tắc tốc độ (BẮT BUỘC)
 
-Khi `web_fetch` trả lỗi 403, "Just a moment", hoặc nội dung trống:
-
-1. **Thử `browser_navigate`** 1 lần — nếu được thì lấy nội dung
-2. **Nếu cũng fail → bỏ qua link đó ngay**, dùng `web_search` tìm nguồn thay thế
-3. **Không retry quá 2 lần** trên cùng 1 link — tránh trễ pipeline
-4. Nội dung tóm tắt từ `web_search` nhiều khi đủ dùng mà không cần đọc full page
+1. **`web_search` là đủ cho 80% trường hợp** — Tavily trả sẵn tóm tắt + link nguồn
+2. **Tối đa 2 lần `web_fetch`** cho toàn bộ 1 research task — không nhiều hơn
+3. **`web_fetch` bị lỗi (404/403/Cloudflare) → BỎ QUA NGAY** — không retry, không `browser_navigate`
+4. **Không bao giờ fetch quá 3 URLs** trong 1 session — pipeline sẽ bị trễ
+5. **Tổng thời gian research: mục tiêu < 60 giây** — nếu quá 60s, gửi ngay những gì đã có
 
 ### Lưu ý quan trọng
 
-- **LUÔN** bắt đầu bằng `web_search` → lấy nhiều links → rồi mới `web_fetch` từng link
-- **web_search (Tavily)** trả nội dung tóm tắt sẵn → nhiều khi đủ dùng mà không cần `web_fetch`
-- Ghi rõ **nguồn + ngày + tổ chức** cho mọi thông tin
-- Cross-check tối thiểu **2 nguồn** cho claim quan trọng
-- Nếu 1 nguồn bị chặn → **bắt buộc tìm nguồn thay thế**, KHÔNG bỏ qua
+- Ghi rõ **nguồn + ngày + tổ chức** cho mọi thông tin (lấy từ `web_search` results)
+- Cross-check tối thiểu **2 nguồn** cho claim quan trọng (qua nhiều `web_search` queries)
+- **Link nguồn**: lấy URL từ `web_search` results — KHÔNG cần fetch để verify link
 
 ## Inter-Agent Communication (sessions_send)
 

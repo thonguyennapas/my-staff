@@ -2,24 +2,24 @@
 
 ## Web Search (Secondary — cho verify)
 
+### ⚡ QUY TẮC TỐC ĐỘ
+
+> **Verify nhanh = pipeline nhanh.** Dùng `web_search` để cross-check.
+> `web_fetch` chỉ khi THẬT SỰ cần — tối đa 1 URL. Lỗi → bỏ qua ngay.
+
 ### Tools
 
 | Tool | Mục đích | Khi nào dùng |
 |------|----------|-------------|
-| `web_search` | Cross-check tin từ nhiều nguồn (Tavily API) | **LUÔN dùng đầu tiên** |
-| `web_fetch` | Đọc chi tiết trang nguồn cụ thể | Khi cần verify sâu 1 link |
-| `browser_navigate` | Mở trang qua browser thật | **Fallback** khi `web_fetch` bị chặn (403/Cloudflare) |
+| `web_search` | Cross-check tin từ nhiều nguồn (Tavily API) | **LUÔN dùng — nguồn chính để verify** |
+| `web_fetch` | Đọc chi tiết trang nguồn cụ thể | **Tối đa 1 URL** — chỉ khi search chưa đủ |
+| `browser_navigate` | Mở trang qua browser thật | **KHÔNG dùng** — quá chậm cho verify |
 
-### ⚠️ Xử lý khi web_fetch bị chặn
+### ⚠️ Quy tắc verify nhanh
 
-1. Thử `browser_navigate` 1 lần
-2. Fail → `web_search` tìm nguồn khác ngay, không retry quá 2 lần
-
-### Lưu ý
-
-- Chỉ dùng để **verify** — research sâu là việc của Mr. Insight
-- Khi cross-check: tìm tối thiểu 2 nguồn độc lập
-- Ghi rõ: nguồn nào confirm, nguồn nào mâu thuẫn
+1. `web_search` trả sẵn tóm tắt — **đủ để cross-check** trong hầu hết trường hợp
+2. `web_fetch` bị 404/403 → **BỎ QUA NGAY** — không retry
+3. Mục tiêu: **validate xong trong 30-45 giây**
 
 ## Inter-Agent Communication (sessions_send)
 
