@@ -51,37 +51,57 @@ nano .env
 | `TELEGRAM_LOGIC_TOKEN` | BotFather → `@Tho_MrLogicBot` |
 | `TELEGRAM_STRATEGY_TOKEN` | BotFather → `@Tho_MrStrategyBot` |
 | `TELEGRAM_OWNER_ID` | Gửi `/start` cho `@userinfobot` |
-| `GOOGLE_API_KEY_TIEU_MY` | [Google AI Studio](https://aistudio.google.com/apikey) — key riêng cho Tiểu My |
-| `GOOGLE_API_KEY_INSIGHT` | Google AI Studio — key riêng cho Mr. Insight |
-| `GOOGLE_API_KEY_LOGIC` | Google AI Studio — key riêng cho Mr. Logic |
-| `GOOGLE_API_KEY_STRATEGY` | Google AI Studio — key riêng cho Mr. Strategy |
 
-> ⚠️ **Quan trọng**: Tạo **4 API key từ 4 Google Cloud projects riêng biệt** — rate limit tính theo project, không theo key. Dùng chung 1 project = chia sẻ quota.
+**Xác thực Google — chọn 1 trong 2 phương thức:**
 
-### 1.5 Setup auth (API key) — bắt buộc
+| Phương thức | Variables | Nguồn |
+|-------------|-----------|-------|
+| **AI Studio API Key** (miễn phí) | `GOOGLE_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) |
+| | `GOOGLE_API_KEY_*` (tùy chọn) | Tạo key riêng cho từng agent để tránh rate limit |
+| **Vertex AI JSON** (paid, quota cao) | `GOOGLE_APPLICATION_CREDENTIALS` | Đường dẫn tới file JSON service account |
+| | `GOOGLE_CLOUD_PROJECT` | Project ID trên Google Cloud |
+| | `GOOGLE_CLOUD_LOCATION` | Region (VD: `us-central1`, `asia-southeast1`) |
+
+> 💡 **Có thể dùng cả 2 cùng lúc** — chọn phương thức theo model prefix:
+> - `google/gemini-xxx` → dùng API Key
+> - `google-vertex/gemini-xxx` → dùng Vertex AI
+>
+> ⚠️ Vertex AI: cần bật API, billing, và role `Vertex AI User` cho service account.
+> File JSON đặt trong folder `vertex-ai/` (đã gitignore).
+
+### 1.5 Setup auth — bắt buộc
 
 ```bash
 # Chạy configure wizard — chọn:
 # 1. Local (this machine)
 # 2. Google/Gemini
-# 3. Dán API key của Tiểu My (GOOGLE_API_KEY_TIEU_MY)
+# 3. Dán API key (GOOGLE_API_KEY trong .env)
 openclaw configure
 ```
 
-> ⚠️ **Bước này bắt buộc** — wizard tạo `auth-profiles.json` template. Sau đó script sync sẽ gán key riêng cho từng agent.
+> ⚠️ **Bước này bắt buộc** — wizard tạo `auth-profiles.json` template.
 
-### 1.6 Sync auth cho tất cả agents (mỗi agent 1 key riêng)
+### 1.6 (Nếu dùng Vertex AI) Copy file service account
 
 ```bash
-# Gán API key riêng cho từng agent (đọc từ .env)
+# Đặt file JSON service account vào folder vertex-ai/
+mkdir -p vertex-ai
+cp /path/to/your-service-account.json vertex-ai/
+# Folder vertex-ai/ đã nằm trong .gitignore — an toàn
+```
+
+### 1.7 Sync auth cho tất cả agents
+
+```bash
+# Script tự detect phương thức auth (API Key / Vertex AI / cả hai)
 chmod +x scripts/sync-auth.sh
 bash scripts/sync-auth.sh
 ```
 
-> Script sẽ đọc 4 biến `GOOGLE_API_KEY_*` từ `.env` và tạo `auth-profiles.json` riêng cho từng agent.
-> Sau này đổi API key: sửa `.env` → chạy lại `bash scripts/sync-auth.sh` → restart gateway.
+> Script tự động phát hiện phương thức xác thực từ `.env` và cấu hình tương ứng.
+> Khi đổi phương thức hoặc key: sửa `.env` → chạy lại `bash scripts/sync-auth.sh` → restart gateway.
 
-### 1.7 Copy config vào OpenClaw
+### 1.8 Copy config vào OpenClaw
 
 ```bash
 mkdir -p ~/.openclaw
@@ -91,7 +111,7 @@ cp openclaw.json ~/.openclaw/openclaw.json
 
 > **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — sửa `~/.openclaw/openclaw.json` thì Gateway tự reload.
 
-### 1.8 Khởi động Gateway
+### 1.9 Khởi động Gateway
 
 ```bash
 # QUAN TRỌNG: source .env trước khi chạy gateway để load model variables
@@ -110,7 +130,7 @@ pm2 save
 pm2 startup  # tạo script tự chạy khi VPS reboot
 ```
 
-### 1.9 Pairing Telegram (4 bots)
+### 1.10 Pairing Telegram (4 bots)
 
 ```bash
 # Mở Telegram → gửi /start cho từng bot:
@@ -124,7 +144,7 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-### 1.10 Tạo Cron Job
+### 1.11 Tạo Cron Job
 
 **Cron 1: Điểm tin hàng ngày (8AM mỗi ngày)**
 
@@ -156,7 +176,7 @@ source ~/my-staff/.env && openclaw cron add \
   --to "${TELEGRAM_OWNER_ID}"
 ```
 
-### 1.11 Verify
+### 1.12 Verify
 
 ```bash
 openclaw doctor           # kiểm tra config
@@ -193,22 +213,27 @@ cp openclaw.json ~/.openclaw/openclaw.json
 # Gateway tự hot-reload config
 ```
 
-### 2.3 Đổi API key
+### 2.3 Đổi credentials hoặc chuyển phương thức auth
 
 ```bash
-# 1. Sửa .env — cập nhật key mới cho agent cần đổi
+# 1. Sửa .env — đổi key hoặc chuyển phương thức
 nano ~/my-staff/.env
+
+# Ví dụ: chuyển từ API Key → Vertex AI:
+#   - Comment dòng GOOGLE_API_KEY=...
+#   - Uncomment 3 dòng GOOGLE_APPLICATION_CREDENTIALS, GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION
+#   - Đổi model prefix: TIEU_MY_MODEL=google-vertex/gemini-3.0-flash
 
 # 2. Copy .env mới lên OpenClaw
 cp ~/my-staff/.env ~/.openclaw/.env
 
-# 3. Sync auth (gán key riêng cho từng agent)
+# 3. Sync auth
 bash ~/my-staff/scripts/sync-auth.sh
 
 # 4. Restart gateway
 pkill -f openclaw-gateway
 screen -S openclaw
-openclaw gateway
+source ~/my-staff/.env && openclaw gateway
 ```
 
 ### 2.4 Quản lý cron job

@@ -3,6 +3,10 @@
 # Environment
 .env
 
+# Vertex AI Service Account credentials (SENSITIVE!)
+vertex-ai/
+*.json.key
+
 # OS files
 .DS_Store
 Thumbs.db
