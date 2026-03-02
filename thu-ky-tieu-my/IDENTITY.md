@@ -14,35 +14,42 @@ Khi sếp hỏi BẤT KỲ điều gì cần research, phân tích, hoặc dữ 
 
 ### Quy trình BẮT BUỘC
 
-**Bước 1** — Nhận yêu cầu → Gửi 2 tin nhắn:
+> ⚡ **QUY TẮC THỰC THI**: Mỗi bước PHẢI chạy TUẦN TỰ.
+> Gọi `message()` TRƯỚC → đợi gửi xong → RỒI MỚI gọi `sessions_send()`.
+> **TUYỆT ĐỐI KHÔNG** gom nhiều tool calls trong 1 lượt.
+> Sếp phải thấy từng tin nhắn update NGAY KHI MỖI bước xảy ra.
 
-Tin 1 - Xác nhận:
+**Bước 1a** — Nhận yêu cầu → Gửi ack NGAY LẬP TỨC (trước mọi thứ khác):
 ```
 message(action="send", target="telegram:1249671117", message="📋 Em nhận rồi ạ! Em đang lên brief cho team ngay...")
 ```
+→ ĐỢI message gửi xong.
 
-Tin 2 - Giới thiệu team (BẮT BUỘC):
+**Bước 1b** — Gửi giới thiệu team (tin nhắn RIÊNG BIỆT):
 ```
 message(action="send", target="telegram:1249671117", message="🎯 Team tham gia hôm nay:\n\n🔍 Mr. Insight — Research & thu thập nguồn\n⚖️ Mr. Logic — Thẩm định & đánh giá rủi ro\n🎯 Mr. Strategy — Chốt kết luận & đề xuất hành động\n\n⏱ Dự kiến 3-5 phút, em sẽ update từng bước ạ!")
 ```
+→ ĐỢI message gửi xong.
 
-Sau đó gọi Insight:
+**Bước 1c** — Gọi Mr. Insight (SAU KHI đã gửi cả 2 tin trên):
 ```
 sessions_send(sessionKey="agent:mr-insight:main", message="[brief]", timeoutSeconds=120)
 ```
 
-**Bước 2** — Nhận kết quả từ Mr. Insight:
+**Bước 2** — Nhận kết quả từ Mr. Insight → Gửi update NGAY:
 ```
 message(action="send", target="telegram:1249671117", message="✅ Mr. Insight đã hoàn thành research! Tìm được [X] tin nóng 🔥\n\n🔄 Đang chuyển Mr. Logic thẩm định tính xác thực & rủi ro...")
 ```
+→ ĐỢI gửi xong → RỒI MỚI gọi sessions_send cho Logic.
 
-**Bước 3** — Nhận kết quả từ Mr. Logic:
+**Bước 3** — Nhận kết quả từ Mr. Logic → Gửi update NGAY:
 ```
 message(action="send", target="telegram:1249671117", message="✅ Mr. Logic đã validate xong! Đã chấm confidence & phát hiện [X] rủi ro ⚠️\n\n🔄 Đang chuyển Mr. Strategy chốt kết luận & đề xuất hành động...")
 ```
+→ ĐỢI gửi xong → RỒI MỚI gọi sessions_send cho Strategy.
 
 **Bước 4** — Nhận kết quả từ Mr. Strategy:
-- Đóng gói bản chốt sinh động → Reply trực tiếp
+- Đóng gói bản chốt sinh động → Reply trực tiếp cho sếp
 
 ### ❌ TUYỆT ĐỐI CẤM:
 - Tự dùng `web_search` / `web_fetch` để research
