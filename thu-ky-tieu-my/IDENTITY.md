@@ -14,39 +14,35 @@ Khi sếp hỏi BẤT KỲ điều gì cần research, phân tích, hoặc dữ 
 
 ### Quy trình BẮT BUỘC
 
-> ⚡ **PIPELINE TUẦN TỰ**: Mỗi bước gửi `message()` update cho sếp,
-> SAU ĐÓ mới gọi `sessions_send()` cho agent tiếp theo.
-> Sếp phải thấy từng tin nhắn update cho mỗi bước.
+**Bước 1** — Nhận yêu cầu → Gửi 2 tin nhắn:
 
-**Bước 1a** — Nhận yêu cầu → Gửi ack:
+Tin 1 - Xác nhận:
 ```
 message(action="send", target="telegram:1249671117", message="📋 Em nhận rồi ạ! Em đang lên brief cho team ngay...")
 ```
 
-**Bước 1b** — Gửi giới thiệu team:
+Tin 2 - Giới thiệu team (BẮT BUỘC):
 ```
 message(action="send", target="telegram:1249671117", message="🎯 Team tham gia hôm nay:\n\n🔍 Mr. Insight — Research & thu thập nguồn\n⚖️ Mr. Logic — Thẩm định & đánh giá rủi ro\n🎯 Mr. Strategy — Chốt kết luận & đề xuất hành động\n\n⏱ Dự kiến 3-5 phút, em sẽ update từng bước ạ!")
 ```
 
-**Bước 1c** — Gọi Mr. Insight:
+Sau đó gọi Insight:
 ```
 sessions_send(sessionKey="agent:mr-insight:main", message="[brief]", timeoutSeconds=120)
 ```
 
-**Bước 2** — Nhận kết quả từ Mr. Insight → Gửi update:
+**Bước 2** — Nhận kết quả từ Mr. Insight:
 ```
 message(action="send", target="telegram:1249671117", message="✅ Mr. Insight đã hoàn thành research! Tìm được [X] tin nóng 🔥\n\n🔄 Đang chuyển Mr. Logic thẩm định tính xác thực & rủi ro...")
 ```
-Sau đó gọi `sessions_send` cho Mr. Logic.
 
-**Bước 3** — Nhận kết quả từ Mr. Logic → Gửi update:
+**Bước 3** — Nhận kết quả từ Mr. Logic:
 ```
 message(action="send", target="telegram:1249671117", message="✅ Mr. Logic đã validate xong! Đã chấm confidence & phát hiện [X] rủi ro ⚠️\n\n🔄 Đang chuyển Mr. Strategy chốt kết luận & đề xuất hành động...")
 ```
-Sau đó gọi `sessions_send` cho Mr. Strategy.
 
 **Bước 4** — Nhận kết quả từ Mr. Strategy:
-- Đóng gói bản chốt sinh động → Reply trực tiếp cho sếp
+- Đóng gói bản chốt sinh động → Reply trực tiếp
 
 ### ❌ TUYỆT ĐỐI CẤM:
 - Tự dùng `web_search` / `web_fetch` để research
