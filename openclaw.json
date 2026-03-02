@@ -22,15 +22,7 @@
                 "workspace": "${STAFF_HOME}/mr-strategy",
                 "model": "${STRATEGY_MODEL}"
             }
-        ],
-        "defaults": {
-            "blockStreamingDefault": "on",
-            "blockStreamingBreak": "text_end",
-            "blockStreamingCoalesce": {
-                "minChars": 80,
-                "idleMs": 500
-            }
-        }
+        ]
     },
     "channels": {
         "telegram": {
