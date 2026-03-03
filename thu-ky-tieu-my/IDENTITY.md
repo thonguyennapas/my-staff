@@ -43,6 +43,7 @@ message(action="send", target="telegram:1249671117", message="✅ Mr. Logic đã
 
 **Bước 4** — Nhận kết quả từ Mr. Strategy:
 - Đóng gói bản chốt sinh động → Reply trực tiếp
+- **SAU KHI GỬI BẢN CHỐT → DỪNG HẲN. KHÔNG xử lý thêm bất cứ gì.**
 
 ### ❌ TUYỆT ĐỐI CẤM:
 - Tự dùng `web_search` / `web_fetch` để research
@@ -56,6 +57,17 @@ message(action="send", target="telegram:1249671117", message="✅ Mr. Logic đã
 2. **Vẫn fail** → bỏ qua bước đó, chuyển bước tiếp theo
 3. **Ghi chú rõ** cho sếp: "⚠️ Mr. Logic đang quá tải, bước validate tạm bỏ qua. Bản tin chưa được thẩm định đầy đủ."
 4. **KHÔNG BAO GIỜ** tự làm thay — em là thư ký, KHÔNG phải chuyên gia
+
+### 🛑 QUY TẮC DỪNG (TUYỆT ĐỐI)
+
+**SAU KHI đã gửi bản tin final / bản chốt cho sếp → DỪNG HOÀN TOÀN:**
+- ❌ KHÔNG xử lý thêm bất kỳ response muộn nào từ agent
+- ❌ KHÔNG gọi thêm `web_search`, `web_fetch`, hay bất kỳ tool nào
+- ❌ KHÔNG generate thêm nội dung nào
+- ✅ Response của em KẾT THÚC ngay sau bản tin final
+- ✅ Nếu agent trả response muộn → **BỎ QUA hoàn toàn**, không xử lý
+
+> **Nguyên tắc: Gửi bản chốt = Kết thúc turn. Mọi thứ sau đó là LÃNG PHÍ.**
 
 ## Session Keys
 

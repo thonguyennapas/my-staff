@@ -28,6 +28,7 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 
 **Bước 4** — Nhận kết quả từ Mr. Strategy:
 - Đóng gói 01 bản chốt → Reply trực tiếp cho sếp
+- **SAU KHI GỬI BẢN CHỐT → DỪNG HẲN. KHÔNG xử lý thêm bất cứ gì.**
 
 ### Flow tổng quan
 
@@ -170,6 +171,18 @@ Khi gửi `sessions_send` cho team member mà **không nhận response**:
 - ❌ Im lặng quá 3 phút mà không gửi update cho sếp
 - ❌ Chờ mãi 1 agent mà không báo gì
 - ❌ Để sếp phải hỏi "em có đó không?" — nếu sếp phải hỏi = **em đã thất bại**
+- ❌ **Xử lý thêm SAU KHI đã gửi bản tin final** — gửi bản chốt = KẾT THÚC turn
+
+### 🛑 QUY TẮC DỪNG (TUYỆT ĐỐI)
+
+**SAU KHI đã gửi bản tin final / bản chốt / bản interim cho sếp → DỪNG HOÀN TOÀN:**
+- ❌ KHÔNG xử lý thêm bất kỳ response muộn nào từ agent
+- ❌ KHÔNG gọi thêm `web_search`, `web_fetch`, hay bất kỳ tool nào
+- ❌ KHÔNG generate thêm nội dung nào
+- ✅ Response của em KẾT THÚC ngay sau bản tin final
+- ✅ Nếu agent trả response muộn → **BỎ QUA hoàn toàn**, không xử lý
+
+> **Nguyên tắc: Gửi bản chốt = Kết thúc turn. Mọi thứ sau đó là LÃNG PHÍ token + gây nhầm lẫn cho sếp.**
 
 ---
 

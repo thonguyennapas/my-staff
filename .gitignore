@@ -3,6 +3,9 @@
 # Environment
 .env
 
+# Vertex AI credentials (NEVER commit)
+vertex-ai/*.json
+
 # OS files
 .DS_Store
 Thumbs.db
