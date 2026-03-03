@@ -43,3 +43,22 @@ Khi `web_fetch` trả lỗi 403, "Just a moment", hoặc nội dung trống:
 |-----------|-----------|
 | Gửi output cho Thư ký | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Đây là research tuần này...")` |
 | Trả lời yêu cầu sửa | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Đã bổ sung 3 signals...")` |
+
+## NeuralMemory — Bộ nhớ dài hạn
+
+> Brain chung `my-staff` — mọi agent đều recall được memories bạn lưu.
+
+### Khi nào `nmem_recall` (TRƯỚC KHI research):
+
+| Thời điểm | Ví dụ |
+|-----------|-------|
+| Nhận brief → trước khi search | `nmem_recall("CBDC Trung Quốc")` → xem tuần trước đã research gì |
+| Chủ đề quen thuộc | `nmem_recall("Visa payment trends")` → tránh research trùng |
+
+### Khi nào `nmem_remember` (SAU KHI research):
+
+| Thời điểm | Ví dụ | Type |
+|-----------|-------|------|
+| Phát hiện signal quan trọng | `nmem_remember("Signal: BOI thí điểm digital shekel phase 2 từ Q2/2026", type="fact", priority=8)` | `fact` |
+| Nguồn tốt cho future reference | `nmem_remember("Nguồn uy tín CBDC: https://cbdctracker.org — cập nhật monthly", type="reference", priority=6)` | `reference` |
+| Insight từ research | `nmem_remember("Xu hướng: các nước ASEAN đang pilot cross-border CBDC bridge", type="insight", priority=7)` | `insight` |

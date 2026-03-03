@@ -103,7 +103,7 @@ Team sửa → Thư ký review lại → Đạt → Gửi sếp bản mới
     │
     ▼
 📋 Thư ký cập nhật hệ thống
-    ├── memory_store("Cập nhật checklist: yêu cầu X cho mọi output")
+    ├── nmem_remember("Cập nhật checklist: yêu cầu X cho mọi output")
     ├── Nâng tiêu chuẩn nguồn / tăng vòng review
     └── Đề xuất "cách làm mới" cho tuần sau
 ```
@@ -117,11 +117,11 @@ Team sửa → Thư ký review lại → Đạt → Gửi sếp bản mới
 | 3 | `sessions_send` yêu cầu làm lại + deadline |
 | 4 | Theo dõi cải thiện 2–3 tuần |
 
-### Ghi nhớ bằng Mem0
+### Ghi nhớ bằng NeuralMemory
 
-- Mem0 **tự động capture** mọi cuộc trò chuyện → ghi lại nguyên nhân + cách sửa
-- Tuần sau Mem0 **tự động recall** context → agent biết cần kiểm tra cải thiện
-- Khi cần tìm cụ thể: `memory_search("phàn nàn tuần trước")` → xem đã cải thiện chưa
+- NeuralMemory **tự động capture** mọi cuộc trò chuyện → ghi lại nguyên nhân + cách sửa
+- Tuần sau NeuralMemory **tự động recall** context → agent biết cần kiểm tra cải thiện
+- Khi cần tìm cụ thể: `nmem_recall("phàn nàn tuần trước")` → xem đã cải thiện chưa
 - Xây dần "bộ nhớ chất lượng" — team ngày càng ít lỗi
 
 ---
@@ -148,16 +148,20 @@ Agent nhận tin → xử lý → trả kết quả lại cho Thư ký → Thư 
 
 ---
 
-## Mem0 Memory Integration
+## NeuralMemory — Long-term Memory
 
-Tất cả agent dùng `@mem0/openclaw-mem0` (Open Source, self-hosted, dùng Google Gemini):
+Tất cả agent dùng `@neuralmemory/openclaw-plugin` (chiếm memory slot, thay thế built-in `memory-core`):
 
 ```json
-{ "plugins": { "slots": { "memory": "openclaw-mem0" } } }
+{ "plugins": { "slots": { "memory": "neuralmemory" } } }
 ```
 
-**Tự động (không cần gọi tool):**
-- **Auto-recall** — inject memories liên quan trước khi respond
-- **Auto-capture** — trích xuất & lưu facts/decisions sau mỗi exchange
+**Brain chung**: `my-staff` — tất cả 4 agents chia sẻ 1 brain → team nhớ chung.
 
-**Tools thủ công (khi cần):** `memory_store`, `memory_search`, `memory_list`, `memory_get`, `memory_forget`
+**Tự động (không cần gọi tool):**
+- **Auto-recall** — inject memories liên quan trước khi respond (hook: `before_agent_start`)
+- **Auto-capture** — trích xuất facts/decisions sau mỗi exchange (hook: `agent_end`)
+
+**Tools thủ công (khi cần):** `nmem_remember`, `nmem_recall`, `nmem_context`, `nmem_todo`, `nmem_stats`, `nmem_health`
+
+**Chi phí**: $0 — spreading activation trên SQLite graph, không cần embedding API.

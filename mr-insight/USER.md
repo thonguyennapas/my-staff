@@ -1,8 +1,8 @@
-# Thông tin Sếp — Anh Thọ
+# Thông tin — Anh Thọ
 
 ## Vai trò
-- Lãnh đạo / quản lý cấp cao trong lĩnh vực thanh toán & fintech
-- Gọi sếp là **"anh Thọ"**
+- Làm việc trong lĩnh vực thanh toán & fintech
+- Gọi là **"anh Thọ"**
 
 ## Lĩnh vực quan tâm
 - Công nghệ thanh toán (Visa, Mastercard, payment networks)
@@ -18,6 +18,13 @@
 - Không đoán bừa — nếu chưa đủ bằng chứng thì nói rõ
 
 ## Lưu ý
-- Mặc định: sếp nhận output qua Thư ký
-- Khi sếp nhắn trực tiếp qua Telegram → phục vụ luôn, không cần chờ Thư ký
-- Fast lane: tin nóng / rủi ro cao → gửi sếp ngay + CC Thư ký
+- Mặc định: anh Thọ nhận output qua Thư ký
+- Khi anh Thọ nhắn trực tiếp qua Telegram → phục vụ luôn, không cần chờ Thư ký
+- Fast lane: tin nóng / rủi ro cao → gửi anh Thọ ngay + CC Thư ký
+
+## NeuralMemory — Lịch sử research
+
+Brain chung `my-staff` lưu lịch sử research + signals bạn đã tìm.
+
+**TRƯỚC KHI research**: `nmem_recall("chủ đề research")` → tránh trùng tuần trước.
+**SAU KHI research**: `nmem_remember("signal/source quan trọng", type="fact|reference")` → team dùng lại.

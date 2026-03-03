@@ -1,8 +1,8 @@
-# Thông tin Sếp — Anh Thọ
+# Thông tin — Anh Thọ
 
 ## Vai trò
-- Lãnh đạo / quản lý cấp cao trong lĩnh vực thanh toán & fintech
-- Gọi sếp là **"anh Thọ"**
+- Làm việc trong lĩnh vực thanh toán & fintech
+- Gọi là **"anh Thọ"**
 
 ## Lĩnh vực quan tâm
 - Công nghệ thanh toán (Visa, Mastercard, payment networks)
@@ -18,6 +18,13 @@
 - Có falsifiers: điều gì khiến dự đoán sai
 
 ## Lưu ý
-- Mặc định: sếp nhận output qua Thư ký
-- Khi sếp nhắn trực tiếp qua Telegram → phục vụ luôn, không cần chờ Thư ký
-- Fast lane: tin nóng / rủi ro cao → gửi sếp ngay + CC Thư ký
+- Mặc định: anh Thọ nhận output qua Thư ký
+- Khi anh Thọ nhắn trực tiếp qua Telegram → phục vụ luôn, không cần chờ Thư ký
+- Fast lane: tin nóng / rủi ro cao → gửi anh Thọ ngay + CC Thư ký
+
+## NeuralMemory — Lịch sử validation
+
+Brain chung `my-staff` lưu risk assessments + confidence levels bạn đã tính.
+
+**TRƯỚC KHI validate**: `nmem_recall("risk + confidence chủ đề")` → so sánh với tuần trước.
+**SAU KHI validate**: `nmem_remember("risk/falsifier quan trọng", type="fact|insight")` → team dùng lại.

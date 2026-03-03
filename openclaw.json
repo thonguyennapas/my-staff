@@ -113,5 +113,23 @@
     },
     "gateway": {
         "mode": "local"
+    },
+    "plugins": {
+        "slots": {
+            "memory": "neuralmemory"
+        },
+        "entries": {
+            "neuralmemory": {
+                "config": {
+                    "pythonPath": "python3",
+                    "brain": "my-staff",
+                    "autoContext": true,
+                    "autoCapture": true,
+                    "contextDepth": 1,
+                    "maxContextTokens": 500,
+                    "timeout": 30000
+                }
+            }
+        }
     }
 }

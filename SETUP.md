@@ -27,6 +27,20 @@ sudo apt-get install -y python3 python3-pip
 npm install -g openclaw@latest
 ```
 
+### 1.2b Cài NeuralMemory (Long-term Memory)
+
+```bash
+# Python package (neural graph engine)
+pip install neural-memory[nlp-vi]
+
+# OpenClaw plugin (chiếm memory slot, thay thế built-in memory-core)
+npm install -g @neuralmemory/openclaw-plugin
+```
+
+> NeuralMemory cho phép agents nhớ xuyên session: facts, decisions, errors, preferences.
+> Tất cả agents dùng chung brain `my-staff` → team nhớ chung.
+> Chi phí: **$0** — hoàn toàn offline, không cần embedding API.
+
 ### 1.3 Clone repo
 
 ```bash
@@ -90,6 +104,20 @@ cp openclaw.json ~/.openclaw/openclaw.json
 ```
 
 > **Ghi chú**: OpenClaw hỗ trợ [hot reload](https://docs.openclaw.ai/gateway/configuration#config-hot-reload) — sửa `~/.openclaw/openclaw.json` thì Gateway tự reload.
+
+### 1.7b Seed Memory (nạp sở thích sếp vào brain)
+
+```bash
+# Chạy 1 lần — nạp preferences, quy tắc, lịch sử vào brain "my-staff"
+chmod +x scripts/seed-memory.sh
+bash scripts/seed-memory.sh
+
+# Verify
+nmem recall "sở thích sếp"
+```
+
+> Brain bắt đầu RỖNG — script này nạp sẵn thông tin sếp để agents nhớ ngay từ ngày đầu.
+> Chỉ cần chạy 1 lần. Sau đó agents tự tích lũy thêm qua `nmem_remember`.
 
 ### 1.8 Khởi động Gateway
 
@@ -162,8 +190,10 @@ source ~/my-staff/.env && openclaw cron add \
 openclaw doctor           # kiểm tra config
 openclaw status           # kiểm tra gateway
 openclaw cron list        # kiểm tra cron
+nmem stats                # kiểm tra NeuralMemory brain
 
-# Test: gửi tin nhắn cho @Tho_TieuMyBot → Agent phản hồi
+# Test memory: gửi tin cho @Tho_TieuMyBot → hỏi "Em nhớ gì về anh?"
+# Agent dùng nmem_recall để truy vấn → nếu brain mới thì chưa có gì
 ```
 
 ---
