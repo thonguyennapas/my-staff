@@ -108,7 +108,7 @@
     "session": {
         "dmScope": "per-account-channel-peer",
         "agentToAgent": {
-            "maxPingPongTurns": 3
+            "maxPingPongTurns": 8
         }
     },
     "gateway": {

@@ -39,7 +39,17 @@ Khi `web_fetch` trả lỗi 403, "Just a moment", hoặc nội dung trống:
 
 ## Inter-Agent Communication (sessions_send)
 
+### Session Keys
+
+| Agent | sessionKey |
+|-------|-----------|
+| Thư ký Tiểu My | `agent:thu-ky-tieu-my:main` |
+| Mr. Logic | `agent:mr-logic:main` |
+
+### Các hành động
+
 | Hành động | Cách dùng |
 |-----------|-----------|
 | Gửi output cho Thư ký | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Đây là research tuần này...")` |
 | Trả lời yêu cầu sửa | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Đã bổ sung 3 signals...")` |
+| 🔥 Phản hồi debate | `sessions_send(sessionKey="agent:mr-logic:main", message="🔍 [PHẢN HỒI] ...")` |

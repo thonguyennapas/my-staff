@@ -23,7 +23,18 @@
 
 ## Inter-Agent Communication (sessions_send)
 
+### Session Keys
+
+| Agent | sessionKey |
+|-------|-----------|
+| Thư ký Tiểu My | `agent:thu-ky-tieu-my:main` |
+| Mr. Insight | `agent:mr-insight:main` |
+
+### Các hành động
+
 | Hành động | Cách dùng |
 |-----------|-----------|
 | Gửi output cho Thư ký | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Validation results...")` |
 | Trả lời yêu cầu bổ sung | `sessions_send(sessionKey="agent:thu-ky-tieu-my:main", message="Đã bổ sung confidence...")` |
+| 🔥 Challenge Mr. Insight | `sessions_send(sessionKey="agent:mr-insight:main", message="⚖️ [CHALLENGE] ...")` |
+| 🔥 Kết thúc debate | `sessions_send(sessionKey="agent:mr-insight:main", message="✅ VALIDATED ...")` |

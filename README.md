@@ -26,11 +26,47 @@
 ## Ranh giới chuyên môn
 
 ```
-Mr. Insight ──research──► Thư ký ──đóng gói──► Sếp
-Mr. Logic   ──validate──►    ▲
-Mr. Strategy ──conclude──►   │
-                             │
-                     Quality Gate
+                        ┌─────────────────────────┐
+                        │     Sếp (Telegram)       │
+                        └────────────┬────────────┘
+                                     │ yêu cầu
+                                     ▼
+                        ┌─────────────────────────┐
+                        │   📋 Thư ký Tiểu My      │
+                        │   (điều phối + quality)   │
+                        └────────────┬────────────┘
+                                     │ brief
+                                     ▼
+                        ┌─────────────────────────┐
+                        │   🔍 Mr. Insight          │
+                        │   (research + signals)    │
+                        └────────────┬────────────┘
+                                     │ research output
+                                     ▼
+                        ┌─────────────────────────┐
+                        │   ⚖️ Mr. Logic            │◄──┐
+                        │   (validate + debate)     │   │ debate
+                        └────────────┬────────────┘   │ (tối đa 3 vòng)
+                                     │ challenge      │
+                                     └────────────────┘
+                                     │ validated output
+                                     ▼
+                        ┌─────────────────────────┐
+                        │   🎯 Mr. Strategy         │
+                        │   (kết luận + đề xuất)    │
+                        └────────────┬────────────┘
+                                     │ conclusions
+                                     ▼
+                        ┌─────────────────────────┐
+                        │   📋 Thư ký Tiểu My      │
+                        │   🔄 Auto Quality Loop    │
+                        │   (tự review 6 tiêu chí) │
+                        └────────────┬────────────┘
+                                     │ bản chốt
+                                     ▼
+                        ┌─────────────────────────┐
+                        │     Sếp (Telegram)       │
+                        └─────────────────────────┘
 ```
 
 - **Mr. Insight**: Nghiên cứu, signals, link nguồn → ❌ KHÔNG chốt khuyến nghị, KHÔNG forecast định lượng
@@ -142,9 +178,14 @@ Các agent tự tương tác với nhau qua `sessions_send` (đã bật trong `o
 Thư ký ──sessions_send──► Mr. Insight   (giao việc / trả lại sửa)
 Thư ký ──sessions_send──► Mr. Logic     (yêu cầu validate / bổ sung)
 Thư ký ──sessions_send──► Mr. Strategy  (yêu cầu kết luận / sửa đề xuất)
+
+🔥 NEW: Debate Loop
+Mr. Logic ──sessions_send──► Mr. Insight  (challenge trực tiếp)
+Mr. Insight ──sessions_send──► Mr. Logic  (phản hồi debate)
+(tối đa 3 vòng, kết thúc bằng ✅ VALIDATED hoặc ⚠️ VALIDATED VỚI LƯU Ý)
 ```
 
-Agent nhận tin → xử lý → trả kết quả lại cho Thư ký → Thư ký đóng gói gửi sếp.
+Agent nhận tin → xử lý → trả kết quả lại cho Thư ký → Thư ký **chạy Auto Quality Loop** → đóng gói gửi sếp.
 
 ---
 
