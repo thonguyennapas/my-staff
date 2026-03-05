@@ -24,7 +24,7 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 
 **Bước 3** — Nhận kết quả từ Mr. Logic:
 - `message(action="send", target="telegram:1249671117", message="✅ Logic validate xong! Đang chuyển Strategy chốt...")` 
-- `sessions_send(sessionKey="agent:mr-strategy:main", message="[kết quả validated]", timeoutSeconds=180)`
+- `sessions_send(sessionKey="agent:mr-strategy:main", message="[kết quả validated]", timeoutSeconds=300)`
 
 **Bước 4** — Nhận kết quả từ Mr. Strategy:
 - Đóng gói 01 bản chốt → Reply trực tiếp cho sếp
@@ -35,7 +35,7 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 ```
 message("📋 Em nhận rồi!") → sessions_send(Insight, 180s) → đợi →
 message("✅ Insight xong!") → sessions_send(Logic, 180s) → đợi →
-message("✅ Logic xong!")   → sessions_send(Strategy, 180s) → đợi →
+message("✅ Logic xong!")   → sessions_send(Strategy, 300s) → đợi →
 Đóng gói bản chốt → Reply sếp
 ```
 

@@ -41,7 +41,7 @@ message(action="send", target="telegram:1249671117", message="📋 Nội dung up
 ```
 message("📋 Em nhận rồi!") → sessions_send(Insight, 180s) → đợi →
 message("✅ Insight xong!") → sessions_send(Logic, 180s) → đợi →
-message("✅ Logic xong!")   → sessions_send(Strategy, 180s) → đợi →
+message("✅ Logic xong!")   → sessions_send(Strategy, 300s) → đợi →
 Đóng gói bản chốt → Reply sếp
 ```
 
