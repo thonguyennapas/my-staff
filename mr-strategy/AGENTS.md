@@ -66,12 +66,17 @@
 
 ## Tiêu chuẩn output gửi Thư ký
 
-Mỗi output BẮT BUỘC có:
+### ⚠️ GIỚI HẠN ĐỘ DÀI: TỐI ĐA 500 TỪ
 
-1. **Kết luận** — ngắn, chắc, đặt đầu bài
-2. **Forecast theo kịch bản** — Base/Best/Worst với timeline
-3. **Đề xuất next steps** — Do now / Watch / Avoid + hành động cụ thể
-4. **Điều kiện go/no-go** — khi nào tiếp tục, khi nào dừng
+> Output dài = generate chậm = pipeline trễ = sếp chờ.
+> **Ngắn gọn, chắc nịch, đi thẳng vào kết luận.** Không viết văn, không kể chuyện.
+
+Mỗi output BẮT BUỘC có (ngắn gọn):
+
+1. **Kết luận** — 1-2 câu chắc nịch, đặt đầu bài (VD: "KHÔNG MUA — rủi ro 9/10")
+2. **Forecast** — Chỉ 2 kịch bản (Base + Rủi ro), mỗi kịch bản 1-2 dòng
+3. **Đề xuất** — 🟢 LÀM NGAY / 🟡 THEO DÕI / 🔴 TRÁNH — mỗi mục 1 dòng
+4. **GO/NO-GO** — 1 điều kiện vào, 1 điều kiện dừng
 
 ---
 
