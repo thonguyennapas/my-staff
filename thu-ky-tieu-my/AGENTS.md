@@ -16,15 +16,15 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 
 **Bước 1** — Nhận yêu cầu:
 - `message(action="send", target="telegram:1249671117", message="📋 Em nhận rồi! Đang phân công Mr. Insight research...")`
-- `sessions_send(sessionKey="agent:mr-insight:main", message="[brief]", timeoutSeconds=120)`
+- `sessions_send(sessionKey="agent:mr-insight:main", message="[brief]", timeoutSeconds=180)`
 
 **Bước 2** — Nhận kết quả từ Mr. Insight:
 - `message(action="send", target="telegram:1249671117", message="✅ Insight research xong! Đang chuyển Logic validate...")`
-- `sessions_send(sessionKey="agent:mr-logic:main", message="[kết quả insight]", timeoutSeconds=120)`
+- `sessions_send(sessionKey="agent:mr-logic:main", message="[kết quả insight]", timeoutSeconds=180)`
 
 **Bước 3** — Nhận kết quả từ Mr. Logic:
 - `message(action="send", target="telegram:1249671117", message="✅ Logic validate xong! Đang chuyển Strategy chốt...")` 
-- `sessions_send(sessionKey="agent:mr-strategy:main", message="[kết quả validated]", timeoutSeconds=120)`
+- `sessions_send(sessionKey="agent:mr-strategy:main", message="[kết quả validated]", timeoutSeconds=180)`
 
 **Bước 4** — Nhận kết quả từ Mr. Strategy:
 - Đóng gói 01 bản chốt → Reply trực tiếp cho sếp
@@ -33,9 +33,9 @@ Khi sếp hỏi về thị trường, giá vàng, tin tức, phân tích, xu hư
 ### Flow tổng quan
 
 ```
-message("📋 Em nhận rồi!") → sessions_send(Insight, 120s) → đợi →
-message("✅ Insight xong!") → sessions_send(Logic, 120s) → đợi →
-message("✅ Logic xong!")   → sessions_send(Strategy, 120s) → đợi →
+message("📋 Em nhận rồi!") → sessions_send(Insight, 180s) → đợi →
+message("✅ Insight xong!") → sessions_send(Logic, 180s) → đợi →
+message("✅ Logic xong!")   → sessions_send(Strategy, 180s) → đợi →
 Đóng gói bản chốt → Reply sếp
 ```
 
@@ -156,11 +156,17 @@ Khi gửi `sessions_send` cho team member mà **không nhận response**:
 > - Báo sếp ngay: "⏳ [Agent] đang xử lý lâu hơn dự kiến, em đang nhắc team..."
 > - Gửi lại `sessions_send` 1 lần nữa (retry)
 
-### Mốc 4 phút — Tự xử lý
+### Mốc 4 phút — Fallback theo agent
 > Nếu retry vẫn không nhận response sau 2 phút nữa:
-> - Báo sếp: "⚠️ [Agent] đang gặp sự cố kỹ thuật. Em sẽ tự xử lý phần này..."
-> - **Tự hoàn thành phần đó** bằng khả năng của mình (web_search + tổng hợp)
-> - Ghi chú trong output: "⚠️ Phần [X] do em tự xử lý do [Agent] không phản hồi. Sẽ bổ sung bản chuyên sâu khi team hoạt động lại."
+> - Báo sếp: "⚠️ [Agent] đang gặp sự cố kỹ thuật. Em đang xử lý..."
+>
+> **Tùy agent nào timeout mà xử lý khác nhau:**
+>
+> | Agent timeout | Cách xử lý |
+> |---------------|------------|
+> | **Mr. Insight** | Tiểu My tự `web_search` cơ bản (tối đa 3 lần, KHÔNG `web_fetch`) → tổng hợp sơ bộ → ghi chú "⚠️ Bản tin do em tự research sơ bộ, chưa qua chuyên gia" |
+> | **Mr. Logic** | **BỎ QUA** → tiếp tục pipeline → ghi chú "⚠️ Bản tin chưa được thẩm định đầy đủ" |
+> | **Mr. Strategy** | Tiểu My tự tóm kết luận từ data Insight + Logic → ghi chú "⚠️ Phần kết luận do em tự tổng hợp" |
 
 ### Mốc 5 phút — Gửi bản interim
 > Nếu chưa đủ tất cả phần:

@@ -39,15 +39,18 @@ message(action="send", target="telegram:1249671117", message="📋 Nội dung up
 ### Pipeline chuẩn
 
 ```
-message("📋 Em nhận rồi!") → sessions_send(Insight, 120s) → đợi →
-message("✅ Insight xong!") → sessions_send(Logic, 120s) → đợi →
-message("✅ Logic xong!")   → sessions_send(Strategy, 120s) → đợi →
+message("📋 Em nhận rồi!") → sessions_send(Insight, 180s) → đợi →
+message("✅ Insight xong!") → sessions_send(Logic, 180s) → đợi →
+message("✅ Logic xong!")   → sessions_send(Strategy, 180s) → đợi →
 Đóng gói bản chốt → Reply sếp
 ```
 
-## 3. Web Search (CHỈ fallback)
+## 3. ⚠️ Web Search — CHỈ khi Mr. Insight timeout
 
-| Tool | Mục đích |
-|------|----------|
-| `web_search` | CHỈ khi team timeout > 4 phút |
-| `web_fetch` | CHỈ khi cần fallback |
+| Tool | Quy tắc |
+|------|---------|
+| `web_search` | CHỈ khi Mr. Insight timeout > 4 phút (tối đa 3 lần, KHÔNG `web_fetch`) |
+| `web_fetch` | ❌ KHÔNG DÙNG — em là thư ký, KHÔNG cần đọc full bài |
+
+> Mr. Logic / Mr. Strategy timeout → bỏ qua hoặc tự tóm, KHÔNG cần web_search.
+
