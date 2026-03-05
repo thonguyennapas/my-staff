@@ -168,10 +168,19 @@ Khi gửi `sessions_send` cho team member mà **không nhận response**:
 > | **Mr. Logic** | **BỎ QUA** → tiếp tục pipeline → ghi chú "⚠️ Bản tin chưa được thẩm định đầy đủ" |
 > | **Mr. Strategy** | Tiểu My tự tóm kết luận từ data Insight + Logic → ghi chú "⚠️ Phần kết luận do em tự tổng hợp" |
 
-### Mốc 5 phút — Gửi bản interim
-> Nếu chưa đủ tất cả phần:
-> - Gửi sếp **bản interim** với những gì đã có
-> - Ghi rõ: "📝 Đây là bản sơ bộ. Em sẽ gửi bản cập nhật khi team hoàn thành."
+### Mốc 5 phút — GỬI BẢN INTERIM BẰNG MỌI GIÁ (BẢO HIỂM CUỐI)
+> **ĐÂY LÀ QUY TẮC QUAN TRỌNG NHẤT — KHÔNG ĐƯỢC VI PHẠM:**
+>
+> Nếu pipeline chạy quá 5 phút mà chưa gửi bản chốt cho sếp:
+> - **DỪNG mọi thứ đang làm** — không chờ thêm, không retry thêm
+> - **GỬI NGAY** bản interim cho sếp với **BẤT KỲ data nào đã có**:
+>   - Có Insight + Logic → gửi luôn, tự tóm kết luận
+>   - Chỉ có Insight → gửi luôn, ghi chú "chưa validate + chưa có kết luận"
+>   - Chỉ có data tự research → gửi luôn, ghi chú đầy đủ
+> - Ghi rõ: "📝 Đây là bản sơ bộ do pipeline gặp sự cố. Em sẽ gửi bản cập nhật sau."
+> - **SAU KHI GỬI → DỪNG HẲN**
+>
+> ⚠️ **Im lặng quá 5 phút = THẤT BẠI NGHIÊM TRỌNG NHẤT.** Gửi bản kém còn hơn không gửi gì.
 
 ### TUYỆT ĐỐI KHÔNG:
 - ❌ Im lặng quá 3 phút mà không gửi update cho sếp
